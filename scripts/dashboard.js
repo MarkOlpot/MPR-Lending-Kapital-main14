@@ -556,7 +556,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("Employerregion").value = user.employer_region;
 
     // Populate Insurance Details
-    document.getElementById("insuranceType").value = user.insurance_type || "";
+    document.getElementById("insuranceType").value =
+      user.insurance_provider || "";
     document.getElementById("issuedDate").value = user.issued_date;
     document.getElementById("expiryDateInsurance").value =
       user.insurance_expiry_date;
@@ -632,7 +633,7 @@ document.addEventListener("DOMContentLoaded", function () {
       employer_city: user.employer_city,
       employer_province: user.employer_province,
       employer_region: user.employer_region,
-      insurance_type: user.insurance_type || "",
+      insurance_type: user.insurance_provider || "",
       issued_date: user.issued_date,
       insurance_expiry_date: user.insurance_expiry_date,
       dependent_name: user.dependent_name,

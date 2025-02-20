@@ -29,25 +29,29 @@ $db->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
     <link rel="stylesheet" href="styles/dashboard.css">
-  
-     <!-- Google Fonts -->
-     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+        rel="stylesheet">
     <!-- SweetAlert2 -->
-     <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-     <!-- Zooming -->
-     <script src="node_modules/zooming/build/zooming.min.js"></script>
+    <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <!-- Zooming -->
+    <script src="node_modules/zooming/build/zooming.min.js"></script>
 
     <title>Dashboard</title>
 </head>
+
 <body>
-<nav>
+    <nav>
         <div class="dashboard-container">
 
             <div class="dashboard-header">
@@ -55,45 +59,46 @@ $db->close();
                     <img src="images/dashboard.png" alt="Dashboard Logo">
                 </div>
                 <div class="dashboard-header-right">
-                <div class="dashboard-header-right-content">
+                    <div class="dashboard-header-right-content">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M3 13h8V3H3zm0 8h8v-6H3zm10 0h8V11h-8zm0-18v6h8V3z" />
                         </svg>
                         <p>Dashboard</p>
                     </div>
                     <div class="notification">
-                    <div class="notification-icon">
-                        <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2m6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1z" />
-                        </svg>
-                        <p>Notification</p>
-                    </div>
-                    <div class="notification-dropdown">
-                        <div class="notification-dropdown-content">
-                            <p>No new notifications</p>
-                            <a href="#">View all notifications</a>
+                        <div class="notification-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2m6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1z" />
+                            </svg>
+                            <p>Notification</p>
                         </div>
-                            
-                    </div>
-                </div>
-                    <div class="profile">
-                    <img src="<?php echo $profilePicturePath; ?>" alt="Profile Picture">
-                        <div class="profile-dropdown">
-                        <p>Welcome, <?php echo $_SESSION['fullname']; ?></p>
-                        <div class="profile-dropdown-content">
-                            <a href="profile.php">Profile</a>
-                            <a href="manage_user_access.php">Manage User Access</a>
-                            <a href="audit_logs.php">Audit Logs</a>
-                            <a href="logout.php">Logout</a>
+                        <div class="notification-dropdown">
+                            <div class="notification-dropdown-content">
+                                <p>No new notifications</p>
+                                <a href="#">View all notifications</a>
+                            </div>
 
                         </div>
                     </div>
-                    <svg class="arrow-down-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <div class="profile">
+                        <img src="<?php echo $profilePicturePath; ?>" alt="Profile Picture">
+                        <div class="profile-dropdown">
+                            <p>Welcome, <?php echo $_SESSION['fullname']; ?></p>
+                            <div class="profile-dropdown-content">
+                                <a href="profile.php">Profile</a>
+                                <a href="manage_user_access.php">Manage User Access</a>
+                                <a href="audit_logs.php">Audit Logs</a>
+                                <a href="logout.php">Logout</a>
+
+                            </div>
+                        </div>
+                        <svg class="arrow-down-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24">
                             <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z" />
                         </svg>
+                    </div>
                 </div>
-            </div>
     </nav>
 
 
@@ -318,13 +323,12 @@ $db->close();
                 <h1>Insurance Details</h1>
                 <div class="input-row">
                     <div>
-                        <label for="insuranceType">Type of Insurance</label><br>
+                        <label for="insuranceType">Insurance Provider</label><br>
                         <select name="insuranceType" id="insuranceType" class="input-text" disabled>
                             <option value="" disabled selected>Select type of insurance</option>
-                            <option value="Health Insurance">Health Insurance</option>
-                            <option value="Life Insurance">Life Insurance</option>
-                            <option value="Single Premium">Single Premium</option>
-                            <option value="Family Premium">Family Premium</option>
+                            <option value="Manulife">Manulife</option>
+                            <option value="Sun Life">Sun Life</option>
+                            <option value="Insular Life">Insular Life</option>
                             <option value="None">None</option>
                         </select>
                     </div>
@@ -415,7 +419,7 @@ $db->close();
             <h2>Add New Loan</h2>
             <form action="#" method="post" enctype="multipart/form-data">
                 <div>
-                    <label for="customerType">Type of Customer</label><br>
+                    <label for="customerType">Loan Type</label><br>
                     <select name="customerType" id="customerType" class="input-text-modal" required>
                         <option value="" disabled selected>Select type of customer</option>
                         <option value="Regular">Regular</option>

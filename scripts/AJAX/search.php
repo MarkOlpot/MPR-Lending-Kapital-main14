@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ea.barangay as employer_barangay, ea.city as employer_city,
             ea.province as employer_province, ea.region as employer_region,
             id.id_type, id.id_no, id.expiry_date, id.id_photo_path,
-            ins.insurance_type, ins.issued_date, ins.expiry_date as insurance_expiry_date,
+            ins.insurance_provider, ins.issued_date, ins.expiry_date as insurance_expiry_date,
             ins.insurance_file_path,
             d.name as dependent_name, d.contact_number_dependents as dependent_contact,
             GROUP_CONCAT(cf.file_path) as collateral_files
