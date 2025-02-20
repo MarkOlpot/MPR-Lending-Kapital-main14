@@ -156,7 +156,7 @@ $db->close();
         <th>Actions</th>
     </tr>
     <?php
-    $db = new mysqli('localhost', 'root', '', 'mprlendingdb');
+    $db = new mysqli('localhost', 'root', '', 'lendingdb');
     $sql = "SELECT id, fullname, email, profile_picture FROM users";
     $result = $db->query($sql);
 

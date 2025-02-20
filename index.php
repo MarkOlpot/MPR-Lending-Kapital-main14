@@ -32,7 +32,6 @@
                 <label for="password" class="strong">Password</label>
                 <br>
                 <input type="password" name="password" id="password" placeholder="Please enter your password" required>
-                <a href="#" class="forgot-password">Forgot Password?</a>
                 <button type="submit" name="login" class="login-button">Log-in</button>
 
                 <div class="signup-container">
