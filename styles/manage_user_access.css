@@ -293,3 +293,17 @@ td:nth-child(2) {
     padding: 10px;
     cursor: pointer;
 }
+.addbutton1 {
+    background-color: #0B192C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+.input-row {
+    /* display: flex; */
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}

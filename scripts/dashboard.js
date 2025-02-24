@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const notificationIcon = document.querySelector(".notification-icon");
   const notificationDropdown = document.querySelector(".notification-dropdown");
 
+  const loanAmount = document.getElementById('loanAmount');
+  
   let transaction_table = document.querySelector(".table-container");
   const borrowerForm = document.querySelector(".form-container form");
 
@@ -345,11 +347,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  loanAmount.addEventListener('input', function(e) {
+    formatNumber(this);
+});
+
   // Form validation
   const loanForm = document.querySelector("#loanModal form");
   // Update the loan form submission handler
   loanForm.addEventListener("submit", function (event) {
     event.preventDefault();
+
+
+    const rawValue = loanAmount.value.replace(/,/g, '');
+    const hiddenInput = document.createElement('input');
+
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'loanAmount';
+    hiddenInput.value = rawValue;
+    
+
+    loanAmount.name = 'loanAmount_formatted';
+
+    // Add the hidden input to the form
+    this.appendChild(hiddenInput);
+    // Validate loan date
+    const loanDate = document.getElementById('loanDate').value;
+    if (!loanDate) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Date",
+            text: "Please select a valid loan date"
+        });
+        return;
+    }
+
+    // Format the date to YYYY-MM-DD
+    const formattedDate = new Date(loanDate).toISOString().split('T')[0];
+    
+    console.log('Original loan date:', loanDate);
+    console.log('Formatted loan date:', formattedDate);
+
+    const formData = new FormData(loanForm);
+    
+    // Update the loan date in the form data
+    formData.set('loanDate', formattedDate);
+
+    // ... rest of your existing submit code ...
+    
     const value = parseFloat(interestRate.value);
 
     if (value < 0 || value > 100) {
@@ -369,6 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, add it!",
     }).then((result) => {
+      console.log(originalValues);
       if (result.isConfirmed) {
         const formData = new FormData(loanForm);
 
@@ -389,50 +434,53 @@ document.addEventListener("DOMContentLoaded", function () {
         if (promissoryNote && promissoryNote.files[0]) {
           formData.append("promissoryNote", promissoryNote.files[0]);
         }
-
+console.log(formData);
         fetch("scripts/AJAX/add_loan.php", {
           method: "POST",
           body: formData,
         })
-          .then((response) => {
-            if (!response.ok) throw new Error("Network response was not ok");
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === "success") {
-              Swal.fire({
-                icon: "success",
-                title: "Success!",
-                text: "Loan has been successfully added.",
-                timer: 3000,
-              }).then(() => {
-                // Clear form and close modal
-                loanForm.reset();
-                document.getElementById("loanModal").style.display = "none";
-
-                // Reset interest rate field
-                interestRate.value = "";
-                interestRate.disabled = true;
-
-                // Reload table data without refreshing page
-                // You'll need to implement this function
-                updateTableData();
-              });
-            } else {
-              throw new Error(data.message || "Failed to add loan");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
             Swal.fire({
-              icon: "error",
-              title: "Error!",
-              text: "An error occurred while adding the loan.",
+              icon: "success", 
+              title: "Success!",
+              text: "Loan has been successfully added.",
+              timer: 3000
+            }).then(() => {
+              // Reset form and modal
+              loanForm.reset();
+              document.getElementById("loanModal").style.display = "none";
+              // Reset interest rate
+              interestRate.value = "";
+              interestRate.disabled = true;
+              // Update table data
+              updateTableData(originalValues.id);
+              lazyLoadTable(originalValues.id);
+
             });
+          } else {
+            throw new Error(data.message || "Failed to add loan");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: error.message || "Failed to add loan. Make sure all required fields are filled correctly.",
           });
+        });
       }
     });
   });
+
+
 
   // Set default date value to today
   document.getElementById("paymentDate").value = today;
@@ -502,6 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  // Modify the populateFormFields function to call loadLoans with borrower ID
   function populateFormFields(user) {
     // Populate personal information
     document.getElementById("fName").value = user.first_name;
@@ -556,7 +605,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("Employerregion").value = user.employer_region;
 
     // Populate Insurance Details
-    document.getElementById("insuranceType").value = user.insurance_type || "";
+    document.getElementById("insuranceType").value =
+      user.insurance_provider || "";
     document.getElementById("issuedDate").value = user.issued_date;
     document.getElementById("expiryDateInsurance").value =
       user.insurance_expiry_date;
@@ -632,7 +682,7 @@ document.addEventListener("DOMContentLoaded", function () {
       employer_city: user.employer_city,
       employer_province: user.employer_province,
       employer_region: user.employer_region,
-      insurance_type: user.insurance_type || "",
+      insurance_type: user.insurance_provider || "",
       issued_date: user.issued_date,
       insurance_expiry_date: user.insurance_expiry_date,
       dependent_name: user.dependent_name,
@@ -641,6 +691,10 @@ document.addEventListener("DOMContentLoaded", function () {
       id_photo: user.id_photo_path,
       insurance_file: user.insurance_file_path,
     };
+
+    // Load loans for this specific borrower
+    loadLoans(user.id);
+
     // Remove any existing event listeners from the edit button
     editbtn.removeEventListener("click", handleEditClick);
 
@@ -965,4 +1019,471 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  const groceryForm = document.getElementById('groceryForm');
+
+  groceryForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const groceryRawValue = groceryAmount.value.replace(/,/g,'');
+
+      const hiddenGroceryInput = document.createElement('input');
+      hiddenGroceryInput.type = 'hidden';
+      hiddenGroceryInput.name = 'groceryAmount';
+      hiddenGroceryInput.value = groceryRawValue;
+
+      groceryAmount.name = 'groceryAmount_formatted';
+
+      this.appendChild(hiddenGroceryInput);
+
+      // Validate borrower selection
+      if (!originalValues || !originalValues.id) {
+          Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "Please select a borrower first."
+          });
+          return;
+      }
+  
+      // Validate amount
+      const amount = parseFloat(document.getElementById('groceryAmount').value);
+      if (isNaN(amount) || amount <= 0) {
+          Swal.fire({
+              icon: "error",
+              title: "Invalid Amount",
+              text: "Please enter a valid amount greater than 0."
+          });
+          return;
+      }
+  
+      const formData = new FormData(groceryForm);
+      formData.append('borrowerId', originalValues.id);
+  
+      Swal.fire({
+          title: "Are you sure?",
+          text: "You want to add this grocery record?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, add it!"
+      }).then((result) => {
+          if (result.isConfirmed) {
+              fetch("scripts/AJAX/add_grocery.php", {
+                  method: "POST",
+                  body: formData
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.status === "success") {
+                      Swal.fire({
+                          icon: "success",
+                          title: "Success!",
+                          text: data.message,
+                          timer: 3000
+                      }).then(() => {
+                          // Reset form and close modal
+                          groceryForm.reset();
+                          document.getElementById("groceryModal").style.display = "none";
+                          // Update table data
+                          loadLoans(originalValues.id);
+                      });
+                  } else {
+                      throw new Error(data.message || "Failed to add grocery");
+                  }
+              })
+              .catch(error => {
+                  console.error("Error:", error);
+                  Swal.fire({
+                      icon: "error",
+                      title: "Error!",
+                      text: error.message || "Failed to add grocery. Please try again."
+                  });
+              });
+          }
+      });
+  });
+  
+  // Add validation for grocery amount
+  const groceryAmount = document.getElementById('groceryAmount');
+  groceryAmount.addEventListener('input', function() {
+       formatNumber(this);
+      if (this.value < 0) {
+          this.value = 0;
+      }
+  });
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const customerType = document.getElementById("customerType");
+  const interestRate = document.getElementById("interestRate");
+  const loanDate = document.getElementById("loanDate");
+  const term = document.getElementById("term");
+  const repaymentDate = document.getElementById("repaymentDate");
+  
+  // Enable interest rate input based on customer type
+  customerType.addEventListener("change", function () {
+      interestRate.disabled = false;
+  });
+
+  // Generate unique reference number
+  function generateReferenceNo() {
+      const timestamp = new Date().getTime();
+      return "LN-" + timestamp;
+  }
+
+  // Auto-calculate repayment date
+  function calculateRepaymentDate() {
+      if (loanDate.value && term.value) {
+          let loanDateObj = new Date(loanDate.value);
+          loanDateObj.setMonth(loanDateObj.getMonth() + parseInt(term.value));
+          repaymentDate.value = loanDateObj.toISOString().split("T")[0];
+      }
+  }
+
+  term.addEventListener("input", calculateRepaymentDate);
+  loanDate.addEventListener("input", calculateRepaymentDate);
+
+  // When form submits, attach reference number
+  document.querySelector("form").addEventListener("submit", function (e) {
+      document.querySelector("form").insertAdjacentHTML(
+          "beforeend",
+          `<input type="hidden" name="reference_no" value="${generateReferenceNo()}">`
+      );
+  });
+
+  loanForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const rawValue = loanAmount.value.replace(/,/g, '');
+    const hiddenInput = document.createElement('input');
+
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'loanAmount';
+    hiddenInput.value = rawValue;
+    
+
+    loanAmount.name = 'loanAmount_formatted';
+
+    // Add the hidden input to the form
+    this.appendChild(hiddenInput);
+
+    // Validate loan date
+    const loanDate = document.getElementById('loanDate').value;
+    if (!loanDate) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Date",
+            text: "Please select a valid loan date"
+        });
+        return;
+    }
+
+    // Format the date
+    const formattedDate = new Date(loanDate).toISOString().split('T')[0];
+    
+    const formData = new FormData(loanForm);
+    formData.set('loanDate', formattedDate); // Update the date in FormData
+
+    console.log('Sending loan date:', formData.get('loanDate')); // Debug log
+
+    // Rest of your form submission code...
+    Swal.fire({
+        icon: "warning",
+        title: "Are you sure you want to add this loan?",
+        // ... existing code ...
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("scripts/AJAX/add_loan.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data); // Debug log
+                // ... rest of your success handling ...
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // ... error handling ...
+            });
+        }
+    });
+});
+});
+
+// Add this function to load loans
+function loadLoans(borrowerId) {
+    if (!borrowerId) return;
+
+    lazyLoadTable(borrowerId);
+
+    fetch(`scripts/AJAX/get_loans.php?borrowerId=${borrowerId}&include_grocery=true`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const tableBody = document.querySelector('#loansTable tbody');
+                tableBody.innerHTML = '';
+
+                data.data.forEach(item => {
+                    const row = document.createElement('tr');
+                    if (item.type === 'grocery') {
+                      row.innerHTML = `
+                      <td>${formatDate(item.loan_date)}</td>
+                      <td>${item.reference_no}</td>
+                      <td>${item.customer_type}</td>
+                      <td>${formatDate(item.repayment_date)}</td>
+                      <td>${formatCurrency(item.loan_amount)}</td>
+                      <td>${item.interest_rate}%</td>
+                      <td>${item.term_months} months</td>
+                      <td><button class="view-button" 
+                              onclick="viewPromissoryNote('${item.promissory_file_path}')"
+                              ${item.promissory_file_path ? '' : 'disabled'}>
+                          View
+                      </button></td>
+                      <td>${item.remarks || 'No remarks'}</td>
+                      <td>${formatCurrency(item.balance)}</td>
+                      <td><button onclick="handlePayment('${item.reference_no}')">Pay</button></td>
+                  `;
+                  
+                    } else {
+                        // Existing loan row format
+                        row.innerHTML = `
+                            <td>${formatDate(item.loan_date)}</td>
+                            <td>${item.reference_no}</td>
+                            <td>${item.customer_type}</td>
+                            <td>${formatDate(item.repayment_date)}</td>
+                            <td>${formatCurrency(item.loan_amount)}</td>
+                            <td>${item.interest_rate}%</td>
+                            <td>${item.term_months} months</td>
+                            <td><button class="view-button" 
+                                    onclick="viewPromissoryNote('${item.promissory_file_path}')"
+                                    ${item.promissory_file_path ? '' : 'disabled'}>
+                                View
+                            </button></td>
+                            <td>${item.remarks}</td>
+                            <td>${formatCurrency(item.balance)}</td>
+                            <td><button onclick="handlePayment('${item.reference_no}')">Pay</button></td>
+                        `;
+                    }
+                    tableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    
+}
+
+// Helper function to handle lazy loading of table data
+function lazyLoadTable(borrowerId) {
+  if (!borrowerId) return;
+
+  const tableBody = document.querySelector('#loansTable tbody');
+  const loadingRow = document.createElement('tr');
+  loadingRow.innerHTML = `
+      <td colspan="11" class="text-center">
+          <div class="loading-spinner">Loading...</div>
+      </td>
+  `;
+  tableBody.appendChild(loadingRow);
+
+  // Add debouncing to prevent multiple rapid requests
+  clearTimeout(window.lazyLoadTimeout);
+  window.lazyLoadTimeout = setTimeout(() => {
+      fetch(`scripts/AJAX/get_loans.php?borrowerId=${borrowerId}&include_grocery=true`)
+          .then(response => response.json())
+          .then(data => {
+              if (data.status === 'success') {
+                  // Clear existing table content
+                  tableBody.innerHTML = '';
+
+                  // Populate with new data
+                  data.data.forEach(item => {
+                      const row = document.createElement('tr');
+                      if (item.type === 'grocery') {
+                          row.innerHTML = `
+                              <td>${formatDate(item.grocery_date)}</td>
+                              <td>${item.reference_no}</td>
+                              <td>Grocery</td>
+                              <td>N/A</td>
+                              <td>${formatCurrency(item.grocery_amount)}</td>
+                              <td>N/A</td>
+                              <td>N/A</td>
+                              <td>N/A</td>
+                              <td>${item.remarks}</td>
+                              <td>${formatCurrency(item.grocery_amount)}</td>
+                              <td>
+                                  <button class="pay-button" onclick="handlePayment('${item.reference_no}')">
+                                      Pay
+                                  </button>
+                              </td>
+                          `;
+                      } else {
+                          row.innerHTML = `
+                              <td>${(item.created_at)}</td>
+                              <td>${item.reference_no}</td>
+                              <td>${item.customer_type}</td>
+                              <td>${formatDate(item.repayment_date)}</td>
+                              <td>${formatCurrency(item.loan_amount)}</td>
+                              <td>${item.interest_rate}%</td>
+                              <td>${item.term_months} months</td>
+                              <td>
+                                  <button class="view-button" onclick="viewPromissoryNote('${item.promissory_file_path}')"
+                                  ${item.promissory_file_path ? '' : 'disabled'}>
+                                      View
+                                  </button>
+                              </td>
+                              <td>${item.remarks}</td>
+                              <td>${formatCurrency(item.balance)}</td>
+                              <td>
+                                  <button class="pay-button" onclick="handlePayment('${item.reference_no}')">
+                                      Pay
+                                  </button>
+                              </td>
+                          `;
+                      }
+                      // Add fade-in animation
+                      row.style.opacity = '0';
+                      tableBody.appendChild(row);
+                      setTimeout(() => {
+                          row.style.transition = 'opacity 0.3s ease-in';
+                          row.style.opacity = '1';
+                      }, 10);
+                  });
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              tableBody.innerHTML = `
+                  <tr>
+                      <td colspan="11" class="text-center text-danger">
+                          Error loading data. Please try again.
+                      </td>
+                  </tr>
+              `;
+          });
+  }, 300); // 300ms debounce delay
+}
+
+
+// Helper function to format dates
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
+}
+
+// Helper function to format currency
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP'
+    }).format(amount);
+}
+
+// Function to handle viewing promissory note
+function viewPromissoryNote(filePath) {
+    if (!filePath) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No promissory note file found'
+        });
+        return;
+    }
+
+    const modal = document.getElementById('promissoryNoteModal');
+    const previewContainer = document.getElementById('promissoryNotePreview');
+    const fileExtension = filePath.split('.').pop().toLowerCase();
+
+    // Clear previous content
+    previewContainer.innerHTML = '';
+
+    // Create preview based on file type
+    if (fileExtension === 'pdf') {
+        previewContainer.innerHTML = `
+             <div class="pdf-container">
+                <iframe
+                    src="images/uploads/promissory_notes/${filePath}"
+                    type="application/pdf"
+                    width="100%"
+                    height="600px"
+                    style="border: none;"
+                ></iframe>
+                <div class="pdf-controls">
+                    <a href="images/uploads/promissory_notes/${filePath}" 
+                       target="_blank" 
+                       class="download-button">
+                        Open in New Tab
+                    </a>
+                </div>
+            </div>
+        `;
+    } else if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+        const img = document.createElement('img');
+        img.src = `images/uploads/promissory_notes/${filePath}`;
+        img.className = 'zoomable';
+        previewContainer.appendChild(img);
+        
+        // Initialize zooming for images
+        const zooming = new Zooming({
+            bgColor: '#000',
+            bgOpacity: 0.8,
+            customSize: '100%'
+        });
+        zooming.listen(img);
+    } else {
+        previewContainer.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <p>File type not supported for preview.</p>
+                <a href="${filePath}" 
+                   target="_blank" 
+                   class="view-button">
+                    Download file instead
+                </a>
+            </div>
+        `;
+    }
+
+    // Show the modal
+    modal.style.display = 'block';
+
+    // Close modal functionality
+    const closeModal = () => {
+        modal.style.display = 'none';
+        previewContainer.innerHTML = ''; // Clear content when closing
+    };
+
+    // Close button handler
+    const closeButton = modal.querySelector('.close-modal');
+    closeButton.onclick = closeModal;
+
+    // Debug logging
+    console.log('Opening file:', filePath);
+    console.log('File extension:', fileExtension);
+}
+
+// Function to handle payment
+function handlePayment(referenceNo) {
+    // Implement payment logic here
+    console.log('Payment for loan:', referenceNo);
+}
+
+
+    
+// Update loadLoans when a new loan is added
+function updateTableData() {
+    loadLoans();
+}
+function formatNumber(input) {
+  // Remove existing commas and non-numeric characters (except decimal point)
+  let value = input.value.replace(/,/g, '').replace(/[^\d.]/g, '');
+  // Format with commas
+  let parts = value.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  input.value = parts.join('.');
+}

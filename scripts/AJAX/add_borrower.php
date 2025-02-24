@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 6. Insert insurance details
         if (isset($_FILES['insurancePhoto'])) {
             $insuranceFile = uploadFile($_FILES['insurancePhoto'], 'insurance_files');
-            $insuranceSql = "INSERT INTO insurance_details (borrower_id, insurance_type, 
+            $insuranceSql = "INSERT INTO insurance_details (borrower_id, insurance_provider, 
                             issued_date, expiry_date, insurance_file_path) 
                             VALUES (?, ?, ?, ?, ?)";
             $insuranceStmt = $db->prepare($insuranceSql);

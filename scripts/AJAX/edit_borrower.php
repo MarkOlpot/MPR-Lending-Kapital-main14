@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $insuranceSql = "UPDATE insurance_details SET 
-                insurance_type = ?, issued_date = ?, expiry_date = ?, insurance_file_path = ?
+                insurance_provider = ?, issued_date = ?, expiry_date = ?, insurance_file_path = ?
                 WHERE borrower_id = ?";
             $insuranceStmt = $db->prepare($insuranceSql);
             $insuranceStmt->bind_param(

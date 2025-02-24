@@ -125,20 +125,28 @@ $db->close();
         <span class="close">&times;</span>
         <h2>Add User</h2>
         <form id="addUserForm" enctype="multipart/form-data">
-            <label for="fullname">Full Name:</label>
+        <div class="input-row">
+            <label class="fn" for="fullname">Full Name:</label>
             <input type="text" id="fullname" name="fullname" required>
+            <br>
+            <br>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
+            <br>
+            <br>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
-
+            <br>
+            <br> 
             <label for="profile_picture">Profile Picture:</label>
             <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-
-            <button type="submit">Add User</button>
+            <br>
+            <br>
+            <button class="addbutton1" type="submit">Add User</button>
         </form>
+        </div>
     </div>
 </div>
 

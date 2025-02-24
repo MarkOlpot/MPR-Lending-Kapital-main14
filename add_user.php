@@ -26,13 +26,13 @@ $checkEmail = $db->prepare("SELECT id FROM users WHERE email = ?");
 $checkEmail->bind_param("s", $email);
 $checkEmail->execute();
 $checkEmail->store_result();
+$emailExists = $checkEmail->num_rows > 0;
+$checkEmail->close();
 
-if ($checkEmail->num_rows > 0) {
+if ($emailExists) {
     echo json_encode(['status' => 'error', 'message' => 'Email already exists.']);
     exit();
 }
-
-$checkEmail->close();
 
 // Hash the password
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -46,8 +46,9 @@ if (!empty($_FILES['profile_picture']['name'])) {
     $userDir = "uploads/users/{$safeFullname}/profile/";
 
     // Create user/profile directory if it doesn't exist
-    if (!is_dir($userDir)) {
-        mkdir($userDir, 0777, true);
+    if (!is_dir($userDir) && !mkdir($userDir, 0777, true) && !is_dir($userDir)) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to create user directory.']);
+        exit();
     }
 
     // Define file path (always named profile.jpg)

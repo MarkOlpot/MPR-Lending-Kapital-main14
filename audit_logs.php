@@ -120,8 +120,8 @@ $db->close();
                 <tr>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>User</th>
-                    <th>Summary</th>
+                    <th>Performed By</th>
+                    <th>Action</th>
                     <th>Category</th>
                 </tr>
                 <tr>
