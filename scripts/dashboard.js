@@ -347,29 +347,79 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  loanAmount.addEventListener('input', function(e) {
-    formatNumber(this);
-});
-
   // Form validation
   const loanForm = document.querySelector("#loanModal form");
   // Update the loan form submission handler
   loanForm.addEventListener("submit", function (event) {
     event.preventDefault();
-
-
-    const rawValue = loanAmount.value.replace(/,/g, '');
-    const hiddenInput = document.createElement('input');
-
-    hiddenInput.type = 'hidden';
-    hiddenInput.name = 'loanAmount';
-    hiddenInput.value = rawValue;
     
+    const formData = new FormData(loanForm);
+    
+    // Get raw value from loan amount
+    const loanAmount = document.getElementById('loanAmount');
+    if (loanAmount) {
+        loanAmount.addEventListener('input', function() {
+            formatNumber(this);
+        });
+    }    const rawValue = loanAmountInput.getAttribute('data-raw-value') || loanAmountInput.value.replace(/,/g, '');
+    
+    // Replace the formatted value with raw value
+    formData.set('loanAmount', rawValue);
 
-    loanAmount.name = 'loanAmount_formatted';
+    // Validate loan amount
+    if (isNaN(parseFloat(rawValue)) || parseFloat(rawValue) <= 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Amount",
+            text: "Please enter a valid loan amount greater than 0"
+        });
+        return;
+    }
 
-    // Add the hidden input to the form
-    this.appendChild(hiddenInput);
+    // Rest of your form submission code...
+    fetch("scripts/AJAX/add_loan.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === "success") {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                timer: 3000
+            }).then(() => {
+                loanForm.reset();
+                document.getElementById("loanModal").style.display = "none";
+                loadLoans(originalValues.id);
+            });
+        } else {
+            throw new Error(data.message || "Failed to add loan");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: error.message || "Failed to add loan. Please try again."
+        });
+    });
+});
+  loanAmount.addEventListener('input', function(e) {
+    formatNumber(this);
+});
+
+  // Add this to your form submit handler
+  loanForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    
     // Validate loan date
     const loanDate = document.getElementById('loanDate').value;
     if (!loanDate) {
@@ -381,106 +431,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Format the date to YYYY-MM-DD
-    const formattedDate = new Date(loanDate).toISOString().split('T')[0];
+    // ... rest of your existing form submission code ...
     
-    console.log('Original loan date:', loanDate);
-    console.log('Formatted loan date:', formattedDate);
-
     const formData = new FormData(loanForm);
     
-    // Update the loan date in the form data
-    formData.set('loanDate', formattedDate);
-
-    // ... rest of your existing submit code ...
+    // Log the date being sent
+    console.log('Loan Date being sent:', formData.get('loanDate'));
     
-    const value = parseFloat(interestRate.value);
-
-    if (value < 0 || value > 100) {
-      Swal.fire({
-        icon: "error",
-        title: "Invalid Interest Rate",
-        text: "Interest rate must be between 0% and 100%",
-      });
-      return;
-    }
-    console.log(originalValues);
-    Swal.fire({
-      icon: "warning",
-      title: "Are you sure you want to add this loan?",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, add it!",
-    }).then((result) => {
-      console.log(originalValues);
-      if (result.isConfirmed) {
-        const formData = new FormData(loanForm);
-
-        // Add borrower ID from the search/selection
-        if (originalValues && originalValues.id) {
-          formData.append("borrowerId", originalValues.id);
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error!",
-            text: "Please select a borrower first.",
-          });
-          return;
-        }
-
-        // Add promissory note if exists
-        const promissoryNote = document.getElementById("promissoryNote");
-        if (promissoryNote && promissoryNote.files[0]) {
-          formData.append("promissoryNote", promissoryNote.files[0]);
-        }
-console.log(formData);
-        fetch("scripts/AJAX/add_loan.php", {
-          method: "POST",
-          body: formData,
-        })
-        .then((response) => {
-          if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status === "success") {
-            Swal.fire({
-              icon: "success", 
-              title: "Success!",
-              text: "Loan has been successfully added.",
-              timer: 3000
-            }).then(() => {
-              // Reset form and modal
-              loanForm.reset();
-              document.getElementById("loanModal").style.display = "none";
-              // Reset interest rate
-              interestRate.value = "";
-              interestRate.disabled = true;
-              // Update table data
-              updateTableData(originalValues.id);
-              lazyLoadTable(originalValues.id);
-
-            });
-          } else {
-            throw new Error(data.message || "Failed to add loan");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error!",
-            text: error.message || "Failed to add loan. Make sure all required fields are filled correctly.",
-          });
-        });
-      }
-    });
-  });
-
-
+    // ... rest of your fetch code ...
+});
 
   // Set default date value to today
   document.getElementById("paymentDate").value = today;
@@ -1025,17 +984,6 @@ console.log(formData);
   groceryForm.addEventListener('submit', function(event) {
       event.preventDefault();
       
-      const groceryRawValue = groceryAmount.value.replace(/,/g,'');
-
-      const hiddenGroceryInput = document.createElement('input');
-      hiddenGroceryInput.type = 'hidden';
-      hiddenGroceryInput.name = 'groceryAmount';
-      hiddenGroceryInput.value = groceryRawValue;
-
-      groceryAmount.name = 'groceryAmount_formatted';
-
-      this.appendChild(hiddenGroceryInput);
-
       // Validate borrower selection
       if (!originalValues || !originalValues.id) {
           Swal.fire({
@@ -1108,7 +1056,7 @@ console.log(formData);
   // Add validation for grocery amount
   const groceryAmount = document.getElementById('groceryAmount');
   groceryAmount.addEventListener('input', function() {
-       formatNumber(this);
+      formatNumber(this);
       if (this.value < 0) {
           this.value = 0;
       }
@@ -1155,13 +1103,10 @@ document.addEventListener("DOMContentLoaded", function () {
   loanForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const rawValue = loanAmount.value.replace(/,/g, '');
-    const hiddenInput = document.createElement('input');
-
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'loanAmount';
     hiddenInput.value = rawValue;
-    
+    const rawValue = loanAmount.value.replace(/,/g, '');
 
     loanAmount.name = 'loanAmount_formatted';
 
@@ -1263,6 +1208,7 @@ function loadLoans(borrowerId) {
                             </button></td>
                             <td>${item.remarks}</td>
                             <td>${formatCurrency(item.balance)}</td>
+                            <td>$
                             <td><button onclick="handlePayment('${item.reference_no}')">Pay</button></td>
                         `;
                     }
@@ -1481,9 +1427,276 @@ function updateTableData() {
 }
 function formatNumber(input) {
   // Remove existing commas and non-numeric characters (except decimal point)
-  let value = input.value.replace(/,/g, '').replace(/[^\d.]/g, '');
-  // Format with commas
+  let value = input.value.replace(/[^\d.]/g, '');
+  
+  // Ensure only one decimal point
   let parts = value.split('.');
+  if (parts.length > 2) {
+      parts = [parts[0], parts.slice(1).join('')];
+  }
+  
+  // Format whole number part with commas
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+  // Limit decimal places to 2
+  if (parts[1]) {
+      parts[1] = parts[1].substring(0, 2);
+  }
+  
+  // Update input value
   input.value = parts.join('.');
+  
+  // Store raw value in data attribute
+  input.setAttribute('data-raw-value', value.replace(/,/g, ''));
 }
+
+const loanForm = document.querySelector("#loanForm");
+const loanAmount = document.getElementById('loanAmount');
+
+loanForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    // Validate borrower selection
+    if (!originalValues || !originalValues.id) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Please select a borrower first."
+        });
+        return;
+    }
+
+    const formData = new FormData(loanForm);
+    formData.append('borrowerId', originalValues.id);
+
+    // Get raw value from loan amount
+    const rawValue = loanAmount.getAttribute('data-raw-value') || loanAmount.value.replace(/,/g, '');
+    formData.set('loanAmount', rawValue);
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You want to add this loan?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, add it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("scripts/AJAX/add_loan.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === "success") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: data.message,
+                        timer: 3000
+                    }).then(() => {
+                        loanForm.reset();
+                        document.getElementById("loanModal").style.display = "none";
+                        loadLoans(originalValues.id);
+                    });
+                } else {
+                    throw new Error(data.message || "Failed to add loan");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: error.message || "Failed to add loan. Please try again."
+                });
+            });
+        }
+    });
+});
+
+// Format loan amount as user types
+loanAmount.addEventListener('input', function() {
+    formatNumber(this);
+});
+
+// Handle customer type change
+customerType.addEventListener("change", function() {
+    if (customerType.value === "Regular") {
+        interestRate.disabled = true;
+        interestRate.value = "7";
+    } else if (customerType.value === "VIP") {
+        interestRate.disabled = true;
+        interestRate.value = "5";
+    } else if (customerType.value === "Other") {
+        interestRate.disabled = false;
+        interestRate.value = "";
+    }
+});
+
+// Add grocery amount formatting
+const groceryAmount = document.getElementById('groceryAmount');
+groceryAmount.addEventListener('input', function() {
+    formatNumber(this);
+});
+
+// Update the grocery form submission
+const groceryForm = document.getElementById('groceryForm');
+
+groceryForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Validate borrower selection
+    if (!originalValues || !originalValues.id) {
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Please select a borrower first."
+        });
+        return;
+    }
+
+    // Get raw value from grocery amount
+    const groceryAmountInput = document.getElementById('groceryAmount');
+    const rawValue = groceryAmountInput.getAttribute('data-raw-value') || groceryAmountInput.value.replace(/,/g, '');
+
+    if (isNaN(parseFloat(rawValue)) || parseFloat(rawValue) <= 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Amount",
+            text: "Please enter a valid amount greater than 0."
+        });
+        return;
+    }
+
+    const formData = new FormData(groceryForm);
+    formData.set('groceryAmount', rawValue); // Use raw value without commas
+    formData.append('borrowerId', originalValues.id);
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You want to add this grocery record?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, add it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("scripts/AJAX/add_grocery.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: data.message,
+                        timer: 3000
+                    }).then(() => {
+                        groceryForm.reset();
+                        document.getElementById("groceryModal").style.display = "none";
+                        loadLoans(originalValues.id);
+                    });
+                } else {
+                    throw new Error(data.message || "Failed to add grocery");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: error.message || "Failed to add grocery. Please try again."
+                });
+            });
+        }
+    });
+});
+// Replace the fetchNotifications function with this updated version
+
+function fetchNotifications(showAll = false) {
+    fetch('scripts/AJAX/notification.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const notificationDropdown = document.querySelector('.notification-dropdown-content');
+                
+                if (data.count > 0) {
+                    // Update notification icon to show count
+                    const notificationCount = document.createElement('span');
+                    notificationCount.className = 'notification-count';
+                    notificationCount.textContent = data.count;
+                    document.querySelector('.notification-icon').appendChild(notificationCount);
+
+                    // Clear existing notifications
+                    notificationDropdown.innerHTML = '';
+
+                    // Determine how many notifications to show
+                    const notificationsToShow = showAll ? data.notifications : data.notifications.slice(0, 3);
+
+                    // Add notifications
+                    notificationsToShow.forEach(notification => {
+                        const notifItem = document.createElement('div');
+                        notifItem.className = 'notification-item';
+                        
+                        // Add urgency class based on days remaining
+                        if (notification.days_remaining <= 7) {
+                            notifItem.classList.add('urgent');
+                        } else if (notification.days_remaining <= 14) {
+                            notifItem.classList.add('warning');
+                        }
+                        
+                        notifItem.innerHTML = `
+                            <p>${notification.message}</p>
+                            <small>${notification.type}</small>
+                        `;
+                        notificationDropdown.appendChild(notifItem);
+                    });
+
+                    // Add "View More" button if there are more than 3 notifications
+                    if (!showAll && data.notifications.length > 3) {
+                        const viewMoreBtn = document.createElement('div');
+                        viewMoreBtn.className = 'view-more-btn';
+                        viewMoreBtn.innerHTML = `
+                            <button>
+                                View More (${data.notifications.length - 3} more)
+                            </button>
+                        `;
+                        viewMoreBtn.addEventListener('click', () => {
+                            fetchNotifications(true);
+                        });
+                        notificationDropdown.appendChild(viewMoreBtn);
+                    }
+
+                    // Add "Show Less" button when showing all notifications
+                    if (showAll && data.notifications.length > 3) {
+                        const showLessBtn = document.createElement('div');
+                        showLessBtn.className = 'view-more-btn';
+                        showLessBtn.innerHTML = '<button>Show Less</button>';
+                        showLessBtn.addEventListener('click', () => {
+                            fetchNotifications(false);
+                        });
+                        notificationDropdown.appendChild(showLessBtn);
+                    }
+                } else {
+                    notificationDropdown.innerHTML = '<p>No new notifications</p>';
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Call fetchNotifications when page loads and every 5 minutes
+document.addEventListener('DOMContentLoaded', function() {
+    fetchNotifications();
+    setInterval(fetchNotifications, 300000); // 5 minutes
+});

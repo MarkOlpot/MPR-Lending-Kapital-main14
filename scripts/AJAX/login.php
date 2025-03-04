@@ -31,6 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['fullname'] = $user['fullname'];
+            
+            // Add audit log for successful login
+            $performed_by = $user['fullname'];
+            $action = $performed_by . " logged in";
+            $category = "Admin Activity Log";
+            
+            $audit_sql = "INSERT INTO audit_logs (date, time, performed_by, action, category) VALUES (CURRENT_DATE(), CURRENT_TIME(), ?, ?, ?)";
+            $audit_stmt = $db->prepare($audit_sql);
+            $audit_stmt->bind_param("sss", $performed_by, $action, $category);
+            $audit_stmt->execute();
+            $audit_stmt->close();
+            
             $response['status'] = 'success';
         } else {
             $response['status'] = 'error';

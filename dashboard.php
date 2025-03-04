@@ -75,10 +75,11 @@ $db->close();
                         </div>
                         <div class="notification-dropdown">
                             <div class="notification-dropdown-content">
-                                <p>No new notifications</p>
-                                <a href="#">View all notifications</a>
+                                <!-- Notifications will be populated by JavaScript -->
                             </div>
-
+                            <!-- <div class="notification-dropdown-footer">
+                                <a href="notifications.php">View all notifications</a>
+                            </div> -->
                         </div>
                     </div>
                     <div class="profile">
@@ -226,7 +227,7 @@ $db->close();
                             <option value="National ID">National ID</option>
                             <option value="Birth Certificate">Birth Certificate</option>
                             <option value="Voter's ID">Voter's ID</option>
-                            <option value="Driver's License">Driver's License</option>
+                            <option value="Drivers License">Driver's License</option>
                             <option value="Passport">Passport</option>
                         </select>
                     </div>
@@ -417,7 +418,7 @@ $db->close();
         <div class="modal-content">
             <span class="close-modal" data-modal="loanModal">&times;</span>
             <h2>Add New Loan</h2>
-            <form action="save_loan.php" method="POST" enctype="multipart/form-data">
+            <form id="loanForm" enctype="multipart/form-data">
             <div>
                     <label for="customerType">Loan Type</label><br>
                     <select name="customerType" id="customerType" class="input-text-modal" required>
@@ -449,16 +450,17 @@ $db->close();
                     <input type="number" id="term" name="term" class="input-text-modal" required>
                 </div>
                 <div>
-                <label for="loanAmount">Loan Amount</label><br>
-                    <input type="text" 
-                        id="loanAmount" 
-                        name="loanAmount" 
-                        class="input-text-modal" 
-                        required 
-                        inputmode="decimal"
-                        placeholder="0.00"
-                        pattern="^\d{1,3}(,\d{3})*(\.\d+)?$">
-                </div>
+    <label for="loanAmount">Loan Amount</label><br>
+    <input type="text" 
+           id="loanAmount" 
+           name="loanAmount" 
+           class="input-text-modal" 
+           required 
+           placeholder="0.00"
+           inputmode="decimal"
+           pattern="^\d{1,3}(,\d{3})*(\.\d+)?$"
+           data-raw-value="">
+</div>
 
                 <div>
                 <label for="remarks">Remarks</label><br>
@@ -503,16 +505,17 @@ $db->close();
                            max="<?php echo date('Y-m-d'); ?>">
                 </div>
                 <div>
-                    <label for="groceryAmount">Grocery Amount</label><br>
-                    <input type="text" 
-                           id="groceryAmount" 
-                           name="groceryAmount" 
-                           class="input-text-modal" 
-                           required 
-                           inputmode="decimal"
-                           placeholder="0.00"
-                           pattern="^\d{1,3}(,\d{3})*(\.\d+)?$">
-                </div>
+    <label for="groceryAmount">Grocery Amount</label><br>
+    <input type="text" 
+           id="groceryAmount" 
+           name="groceryAmount" 
+           class="input-text-modal" 
+           required 
+           inputmode="decimal"
+           placeholder="0.00"
+           pattern="^\d{1,3}(,\d{3})*(\.\d+)?$"
+           data-raw-value="">
+</div>
                 <div class="button-container">
                     <input type="submit" value="Add Grocery" class="grocerysubmit-btn">
                 </div>
@@ -549,7 +552,6 @@ $db->close();
                     <th>Promissory Note</th>
                     <th>Remarks</th>
                     <th>Balance</th>
-                    
                     <th>Action</th>
                 </tr>
             </thead>

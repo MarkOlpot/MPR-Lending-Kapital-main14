@@ -56,6 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $result = $stmt->get_result();
 
+        // Log the search action and search terms
+        if (isset($_SESSION['fullname'])) {
+            $performed_by = $_SESSION['fullname'];
+            
+            // Log only the search terms
+            $search_action = "$performed_by searched for term: $searchTerm";
+            $search_category = "Search Terms";
+            
+            $audit_sql = "INSERT INTO audit_logs (date, time, performed_by, action, category) 
+                         VALUES (CURRENT_DATE(), CURRENT_TIME(), ?, ?, ?)";
+            $audit_stmt = $db->prepare($audit_sql);
+            $audit_stmt->bind_param("sss", $performed_by, $search_action, $search_category);
+            $audit_stmt->execute();
+            $audit_stmt->close();
+        }
+
         $borrowers = array();
         while ($row = $result->fetch_assoc()) {
             // Format dates

@@ -152,6 +152,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $db->commit();
+
+        // Add audit log entry
+        if (isset($_SESSION['fullname'])) {
+            $performed_by = $_SESSION['fullname'];
+            $borrower_name = $_POST['fName'] . ' ' . 
+                            ($_POST['mName'] ? $_POST['mName'] . ' ' : '') . 
+                            $_POST['surname'];
+            
+            $audit_action = "$performed_by added new borrower: $borrower_name";
+            $audit_category = "Borrower Management Logs";
+            
+            $audit_sql = "INSERT INTO audit_logs (date, time, performed_by, action, category) 
+                         VALUES (CURRENT_DATE(), CURRENT_TIME(), ?, ?, ?)";
+            $audit_stmt = $db->prepare($audit_sql);
+            $audit_stmt->bind_param("sss", $performed_by, $audit_action, $audit_category);
+            $audit_stmt->execute();
+            $audit_stmt->close();
+        }
+
         $response['status'] = 'success';
         $response['message'] = 'Borrower added successfully';
         $response['borrower_id'] = $borrowerId;

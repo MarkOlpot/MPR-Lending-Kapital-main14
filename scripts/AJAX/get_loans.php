@@ -27,7 +27,7 @@ try {
         LEFT JOIN promissory_files p ON l.promissory_id = p.id
         LEFT JOIN loan_balance lb ON l.borrower_id = lb.borrower_id
         WHERE l.borrower_id = ?
-        ORDER BY l.loan_date DESC
+        ORDER BY l.loan_date ASC
     ");
 
     $stmt->bind_param("i", $borrowerId);

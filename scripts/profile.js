@@ -84,3 +84,81 @@ saveProfileButton.addEventListener('click', function() {
 dashboardHeader.addEventListener("click", function () {
     window.location.href = "dashboard.php";
 });
+
+function fetchNotifications(showAll = false) {
+    fetch('scripts/AJAX/notification.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const notificationDropdown = document.querySelector('.notification-dropdown-content');
+                
+                if (data.count > 0) {
+                    // Update notification icon to show count
+                    const notificationCount = document.createElement('span');
+                    notificationCount.className = 'notification-count';
+                    notificationCount.textContent = data.count;
+                    document.querySelector('.notification-icon').appendChild(notificationCount);
+
+                    // Clear existing notifications
+                    notificationDropdown.innerHTML = '';
+
+                    // Determine how many notifications to show
+                    const notificationsToShow = showAll ? data.notifications : data.notifications.slice(0, 3);
+
+                    // Add notifications
+                    notificationsToShow.forEach(notification => {
+                        const notifItem = document.createElement('div');
+                        notifItem.className = 'notification-item';
+                        
+                        // Add urgency class based on days remaining
+                        if (notification.days_remaining <= 7) {
+                            notifItem.classList.add('urgent');
+                        } else if (notification.days_remaining <= 14) {
+                            notifItem.classList.add('warning');
+                        }
+                        
+                        notifItem.innerHTML = `
+                            <p>${notification.message}</p>
+                            <small>${notification.type}</small>
+                        `;
+                        notificationDropdown.appendChild(notifItem);
+                    });
+
+                    // Add "View More" button if there are more than 3 notifications
+                    if (!showAll && data.notifications.length > 3) {
+                        const viewMoreBtn = document.createElement('div');
+                        viewMoreBtn.className = 'view-more-btn';
+                        viewMoreBtn.innerHTML = `
+                            <button>
+                                View More (${data.notifications.length - 3} more)
+                            </button>
+                        `;
+                        viewMoreBtn.addEventListener('click', () => {
+                            fetchNotifications(true);
+                        });
+                        notificationDropdown.appendChild(viewMoreBtn);
+                    }
+
+                    // Add "Show Less" button when showing all notifications
+                    if (showAll && data.notifications.length > 3) {
+                        const showLessBtn = document.createElement('div');
+                        showLessBtn.className = 'view-more-btn';
+                        showLessBtn.innerHTML = '<button>Show Less</button>';
+                        showLessBtn.addEventListener('click', () => {
+                            fetchNotifications(false);
+                        });
+                        notificationDropdown.appendChild(showLessBtn);
+                    }
+                } else {
+                    notificationDropdown.innerHTML = '<p>No new notifications</p>';
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Call fetchNotifications when page loads and every 5 minutes
+document.addEventListener('DOMContentLoaded', function() {
+    fetchNotifications();
+    setInterval(fetchNotifications, 300000); // 5 minutes
+});

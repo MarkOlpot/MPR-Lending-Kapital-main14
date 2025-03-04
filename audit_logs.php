@@ -1,30 +1,90 @@
 <?php
-// Start the session to access user data
 session_start();
 
-// Database connection
-$db = new mysqli('localhost', 'root', '', 'lendingdb');
-
-// Check connection
-if ($db->connect_error) {
-    die("Connection failed: " . $db->connect_error);
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
+    exit();
 }
 
+// Include database connection
+require_once 'scripts/AJAX/db_connect.php';
+
 // Fetch the profile picture path for the logged-in user
-$user_id = $_SESSION['user_id']; // Make sure this matches the session variable set when the user logs in
-$sql = "SELECT profile_picture FROM users WHERE id = ?";  // Adjusted column name
-$stmt = $db->prepare($sql);
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT profile_picture FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 // Check if the user has a profile picture
-$profilePicturePath = $user['profile_picture'] ? $user['profile_picture'] : 'images/default_profile.jpg'; // Default image if no profile picture is set
-$profilePicturePath = isset($user['profile_picture']) && !empty($user['profile_picture']) ? $user['profile_picture'] : 'uploads/defaultprof.jpg';
+$profilePicturePath = isset($user['profile_picture']) && !empty($user['profile_picture']) 
+    ? $user['profile_picture'] 
+    : 'uploads/defaultprof.jpg';
 
 $stmt->close();
-$db->close();
+
+// Fetch audit logs
+try {
+    $sql = "SELECT 
+            id,
+            DATE_FORMAT(date, '%Y-%m-%d') as date,
+            TIME_FORMAT(time, '%H:%i:%s') as time,
+            performed_by,
+            action,
+            category,
+            DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at
+        FROM audit_logs 
+        ORDER BY date DESC, time DESC";
+
+    $result = $conn->query($sql);
+    $logs = array();
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $log = array(
+                'id' => $row['id'] ?? '',
+                'date' => $row['date'] ?? date('Y-m-d'),
+                'time' => $row['time'] ?? date('H:i:s'),
+                'performed_by' => $row['performed_by'] ?? 'Unknown',
+                'action' => $row['action'] ?? 'No action recorded',
+                'category' => $row['category'] ?? 'Uncategorized',
+                'created_at' => $row['created_at'] ?? date('Y-m-d H:i:s')
+            );
+            $logs[] = $log;
+        }
+
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            // If AJAX request, return JSON
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'success', 'data' => $logs]);
+            $conn->close();
+            exit();
+        }
+    } else {
+        throw new Exception("Error fetching audit logs");
+    }
+
+} catch (Exception $e) {
+    error_log("Audit Log Error: " . $e->getMessage());
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Error fetching audit logs',
+            'debug' => $e->getMessage()
+        ]);
+        $conn->close();
+        exit();
+    }
+}
+
+// Close the connection before HTML output
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +94,8 @@ $db->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
     <link rel="stylesheet" href="styles/audit_logs.css">
+    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
      <!-- Google Fonts -->
      <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,6 +105,9 @@ $db->close();
      <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
      <!-- Zooming -->
      <script src="node_modules/zooming/build/zooming.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <title>Dashboard</title>
 </head>
@@ -104,32 +169,33 @@ $db->close();
     </div>
 
     <div class="audit-logs-container">
-        <div class="audit-logs-buttons">
-            <div class="audit-logs-search">
-                <input type="text" placeholder="Search">
-                <button>Search</button>
+        <div class="audit-logs-controls">
+            <div class="dataTables_filter">
+                <!-- DataTables search will be automatically inserted here -->
             </div>
-            <div class="audit-logs-buttons-right">
-                <button id="filter-audit-logs-btn">Filter</button>
-                <button id="export-audit-logs-btn">Export</button>
-                <button id="print-audit-logs-btn">Print</button>
+            <div class="control-buttons">
+                <button id="filter-audit-logs-btn" class="control-btn">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button id="export-audit-logs-btn" class="control-btn">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <button id="print-audit-logs-btn" class="control-btn">
+                    <i class="fas fa-print"></i> Print
+                </button>
             </div>
         </div>
         <div class="audit-logs-table">
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Performed By</th>
-                    <th>Action</th>
-                    <th>Category</th>
-                </tr>
-                <tr>
-                    <td>2021-09-01</td>
-                    <td>12:00:00</td>
-                    <td>John Doe</td>
-                    <td>John Doe has been added</td>
-                    <td>User Management</td>
+            <table id="auditLogsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Performed By</th>
+                        <th>Action</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
             </table>
         </div>
     </div>
