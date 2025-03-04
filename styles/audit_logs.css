@@ -599,3 +599,24 @@ notification-dropdown {
 .notification-dropdown-footer a:hover {
     text-decoration: underline;
 }
+
+.view-more-btn {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.view-more-btn button {
+    background: none;
+    border: none;
+    color: #1E3E62;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.view-more-btn button:hover {
+    background-color: #f5f5f5;
+    text-decoration: underline;
+}

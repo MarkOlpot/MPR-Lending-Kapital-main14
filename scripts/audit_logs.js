@@ -18,11 +18,11 @@ profileDropdown.addEventListener("mouseout", function () {
   arrowDownIcon.style.transition = "transform 0.5s ease";
 });
 
-// Remove or comment out the existing notification click handler
-// notificationIcon.addEventListener("click", function () {
-//   notificationDropdown.style.display =
-//     notificationDropdown.style.display === "block" ? "none" : "block";
-// });
+
+notificationIcon.addEventListener("click", function () {
+  notificationDropdown.style.display =
+    notificationDropdown.style.display === "block" ? "none" : "block";
+});
 
 dashboardHeader.addEventListener("click", function () {
   window.location.href = "dashboard.php";
@@ -186,73 +186,80 @@ $(document).ready(function() {
     }, 30000);
 });
 // Add this at the beginning of your file
-function fetchNotifications() {
+function fetchNotifications(showAll = false) {
     fetch('scripts/AJAX/notification.php')
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
                 const notificationDropdown = document.querySelector('.notification-dropdown-content');
-                const notificationIcon = document.querySelector('.notification-icon');
                 
-                // Update notification count
-                let countElement = document.querySelector('.notification-count');
-                const unreadCount = data.notifications.length; // Changed to total notifications
-                
-                if (unreadCount > 0) {
-                    if (!countElement) {
-                        countElement = document.createElement('span');
-                        countElement.className = 'notification-count';
-                        notificationIcon.appendChild(countElement);
-                    }
-                    countElement.textContent = unreadCount;
-                } else if (countElement) {
-                    countElement.remove();
-                }
+                if (data.count > 0) {
+                    // Update notification icon to show count
+                    const notificationCount = document.createElement('span');
+                    notificationCount.className = 'notification-count';
+                    notificationCount.textContent = data.count;
+                    document.querySelector('.notification-icon').appendChild(notificationCount);
 
-                // Update notification content
-                if (data.notifications.length > 0) {
-                    notificationDropdown.innerHTML = data.notifications
-                        .map(notification => `
-                            <div class="notification-item ${notification.days_remaining <= 7 ? 'urgent' : 
-                                   notification.days_remaining <= 14 ? 'warning' : ''}">
-                                <div class="notification-content">
-                                    <p>${notification.message}</p>
-                                    <div class="notification-meta">
-                                        <span class="notification-type">${notification.type}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('');
+                    // Clear existing notifications
+                    notificationDropdown.innerHTML = '';
+
+                    // Determine how many notifications to show
+                    const notificationsToShow = showAll ? data.notifications : data.notifications.slice(0, 3);
+
+                    // Add notifications
+                    notificationsToShow.forEach(notification => {
+                        const notifItem = document.createElement('div');
+                        notifItem.className = 'notification-item';
+                        
+                        // Add urgency class based on days remaining
+                        if (notification.days_remaining <= 7) {
+                            notifItem.classList.add('urgent');
+                        } else if (notification.days_remaining <= 14) {
+                            notifItem.classList.add('warning');
+                        }
+                        
+                        notifItem.innerHTML = `
+                            <p>${notification.message}</p>
+                            <small>${notification.type}</small>
+                        `;
+                        notificationDropdown.appendChild(notifItem);
+                    });
+
+                    // Add "View More" button if there are more than 3 notifications
+                    if (!showAll && data.notifications.length > 3) {
+                        const viewMoreBtn = document.createElement('div');
+                        viewMoreBtn.className = 'view-more-btn';
+                        viewMoreBtn.innerHTML = `
+                            <button>
+                                View More (${data.notifications.length - 3} more)
+                            </button>
+                        `;
+                        viewMoreBtn.addEventListener('click', () => {
+                            fetchNotifications(true);
+                        });
+                        notificationDropdown.appendChild(viewMoreBtn);
+                    }
+
+                    // Add "Show Less" button when showing all notifications
+                    if (showAll && data.notifications.length > 3) {
+                        const showLessBtn = document.createElement('div');
+                        showLessBtn.className = 'view-more-btn';
+                        showLessBtn.innerHTML = '<button>Show Less</button>';
+                        showLessBtn.addEventListener('click', () => {
+                            fetchNotifications(false);
+                        });
+                        notificationDropdown.appendChild(showLessBtn);
+                    }
                 } else {
-                    notificationDropdown.innerHTML = '<p class="no-notifications">No new notifications</p>';
+                    notificationDropdown.innerHTML = '<p>No new notifications</p>';
                 }
             }
         })
         .catch(error => console.error('Error:', error));
 }
 
-// Remove or comment out these functions
-// function markNotificationAsRead(notificationId) {...}
-
-// Update the DOMContentLoaded event listener
+// Call fetchNotifications when page loads and every 5 minutes
 document.addEventListener('DOMContentLoaded', function() {
-    const notificationIcon = document.querySelector('.notification-icon');
-    
-    // Toggle notification dropdown
-    notificationIcon.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const dropdown = document.querySelector('.notification-dropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.notification')) {
-            document.querySelector('.notification-dropdown').style.display = 'none';
-        }
-    });
-
-    // Initial load and refresh
     fetchNotifications();
-    setInterval(fetchNotifications, 30000); // Refresh every 30 seconds
+    setInterval(fetchNotifications, 300000); // 5 minutes
 });
