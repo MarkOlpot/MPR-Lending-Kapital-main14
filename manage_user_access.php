@@ -1,6 +1,9 @@
 <?php
+require_once 'scripts/check_admin.php';
+checkAdminAccess();
+
 // Start the session to access user data
-session_start();
+
 
 // Database connection
 $db = new mysqli('localhost', 'root', '', 'lendingdb');

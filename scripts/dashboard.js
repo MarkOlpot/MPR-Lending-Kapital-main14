@@ -1700,3 +1700,31 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchNotifications();
     setInterval(fetchNotifications, 300000); // 5 minutes
 });
+// Add to dashboard.js
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle unauthorized access attempts
+  const handleUnauthorized = (error) => {
+      if (error.status === 403) {
+          Swal.fire({
+              title: 'Access Denied',
+              text: 'You do not have permission to access this page.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+          }).then(() => {
+              window.location.href = 'dashboard.php';
+          });
+      }
+  };
+
+  // Add error handling to fetch requests
+  const originalFetch = window.fetch;
+  window.fetch = function() {
+      return originalFetch.apply(this, arguments)
+          .then(response => {
+              if (response.status === 403) {
+                  handleUnauthorized(response);
+              }
+              return response;
+          });
+  };
+});

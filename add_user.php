@@ -1,88 +1,102 @@
 <?php
-// Start session
-session_start();
-
-// Database connection
-$db = new mysqli('localhost', 'root', '', 'lendingdb');
-
-// Check connection
-if ($db->connect_error) {
-    die(json_encode(['status' => 'error', 'message' => 'Database connection failed.']));
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Validate input data
-$fullname = trim($_POST['fullname']);
-$email = trim($_POST['email']);
-$password = trim($_POST['password']);
+// Set headers and error reporting before any output
+header('Content-Type: application/json');
+error_reporting(0);
+ini_set('display_errors', 0);
 
-// Check for empty fields
-if (empty($fullname) || empty($email) || empty($password)) {
-    echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
-    exit();
-}
+require_once 'scripts/check_admin.php';
 
-// Check if email already exists
-$checkEmail = $db->prepare("SELECT id FROM users WHERE email = ?");
-$checkEmail->bind_param("s", $email);
-$checkEmail->execute();
-$checkEmail->store_result();
-$emailExists = $checkEmail->num_rows > 0;
-$checkEmail->close();
+try {
+    checkAdminAccess();
 
-if ($emailExists) {
-    echo json_encode(['status' => 'error', 'message' => 'Email already exists.']);
-    exit();
-}
-
-// Hash the password
-$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-// Set default profile picture path
-$profilePicturePath = 'uploads/defaultprof.jpg';
-
-// Handle profile picture upload
-if (!empty($_FILES['profile_picture']['name'])) {
-    $safeFullname = preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($fullname)); // Sanitize folder name
-    $userDir = "uploads/users/{$safeFullname}/profile/";
-
-    // Create user/profile directory if it doesn't exist
-    if (!is_dir($userDir) && !mkdir($userDir, 0777, true) && !is_dir($userDir)) {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to create user directory.']);
-        exit();
+    // Database connection
+    $db = new mysqli('localhost', 'root', '', 'lendingdb');
+    if ($db->connect_error) {
+        throw new Exception('Database connection failed');
     }
 
-    // Define file path (always named profile.jpg)
-    $targetFilePath = $userDir . "profile.jpg";
+    $db->begin_transaction();
 
-    // Validate file type
-    $fileType = strtolower(pathinfo($_FILES["profile_picture"]["name"], PATHINFO_EXTENSION));
-    $allowedTypes = ['jpg', 'jpeg', 'png'];
+    try {
+        // Validate input
+        $fullname = trim($_POST['fullname'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+        $role = trim($_POST['role'] ?? 'user');
 
-    if (!in_array($fileType, $allowedTypes)) {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid image format (JPG, JPEG, PNG allowed).']);
-        exit();
+        if (empty($fullname) || empty($email) || empty($password)) {
+            throw new Exception('All fields are required');
+        }
+
+        // Check email exists
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($row['count'] > 0) {
+            throw new Exception('Email already exists');
+        }
+
+        // Hash password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Handle profile picture
+        $profilePicturePath = 'uploads/defaultprof.jpg';
+        if (!empty($_FILES['profile_picture']['name'])) {
+            $safeFullname = preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($fullname));
+            $userDir = "uploads/users/{$safeFullname}/profile/";
+            
+            if (!is_dir($userDir)) {
+                mkdir($userDir, 0777, true);
+            }
+
+            $targetFilePath = $userDir . "profile.jpg";
+            $fileType = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
+            
+            if (!in_array($fileType, ['jpg', 'jpeg', 'png'])) {
+                throw new Exception('Invalid image format (JPG, JPEG, PNG allowed)');
+            }
+
+            if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetFilePath)) {
+                $profilePicturePath = $targetFilePath;
+            }
+        }
+
+        // Insert user
+        $stmt = $db->prepare("INSERT INTO users (fullname, email, password, profile_picture, role) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $fullname, $email, $hashedPassword, $profilePicturePath, $role);
+        
+        if (!$stmt->execute()) {
+            throw new Exception('Failed to add user');
+        }
+
+        $db->commit();
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'User added successfully'
+        ]);
+
+    } catch (Exception $e) {
+        $db->rollback();
+        throw $e;
     }
 
-    // Move file and overwrite if exists
-    if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFilePath)) {
-        $profilePicturePath = $targetFilePath;
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to upload image.']);
-        exit();
-    }
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
+    ]);
+} finally {
+    if (isset($stmt)) $stmt->close();
+    if (isset($db)) $db->close();
 }
-
-// Insert user into database
-$insertUser = $db->prepare("INSERT INTO users (fullname, email, password, profile_picture) VALUES (?, ?, ?, ?)");
-$insertUser->bind_param("ssss", $fullname, $email, $hashedPassword, $profilePicturePath);
-
-if ($insertUser->execute()) {
-    echo json_encode(['status' => 'success', 'message' => 'User added successfully!']);
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Error adding user.']);
-}
-
-// Close connection
-$insertUser->close();
-$db->close();
 ?>

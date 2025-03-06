@@ -83,8 +83,10 @@ $db->close();
                         <p>Welcome, <?php echo $fullname; ?></p>
                         <div class="profile-dropdown-content">
                             <a href="profile.php">Profile</a>
-                            <a href="manage_user_access.php">Manage User Access</a>
-                            <a href="audit_logs.php">Audit Logs</a>
+                            <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                                <a href="manage_user_access.php">Manage User Access</a>
+                                <a href="audit_logs.php">Audit Logs</a>
+                            <?php endif; ?>
                             <a href="logout.php">Logout</a>
                         </div>
                     </div>
