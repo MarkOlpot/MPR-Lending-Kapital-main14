@@ -20,6 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Connection Failed: ' . $db->connect_error);
         }
 
+        // Get borrower name for audit log
+        $borrowerNameSql = "SELECT CONCAT(first_name, ' ', middle_name, ' ', surname) as full_name 
+                            FROM borrowers WHERE id = ?";
+        $borrowerStmt = $db->prepare($borrowerNameSql);
+        $borrowerStmt->bind_param("i", $borrowerId);
+        $borrowerStmt->execute();
+        $borrowerResult = $borrowerStmt->get_result();
+        $borrower = $borrowerResult->fetch_assoc();
+
         $db->begin_transaction();
 
         // Get file paths before deletion
@@ -131,6 +140,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+
+        // Before commit, add audit log entry
+        $auditSql = "INSERT INTO audit_logs (date, time, performed_by, action, category) 
+                     VALUES (CURDATE(), CURTIME(), ?, ?, ?)";
+        $auditStmt = $db->prepare($auditSql);
+        $performedBy = $_SESSION['fullname'];
+        $action = $performedBy . " deleted borrower: " . $borrower['full_name'];
+        $category = "Borrower Management Logs";
+        $auditStmt->bind_param("sss", $performedBy, $action, $category);
+        $auditStmt->execute();
 
         $db->commit();
         $response['status'] = 'success';

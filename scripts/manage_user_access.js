@@ -166,35 +166,50 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Handle Delete Button
     document.querySelectorAll(".delete-button").forEach(button => {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", async function() {
             const userId = this.getAttribute("data-id");
+            
+            try {
+                const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, delete it!"
+                });
 
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch("manage_user.php", {
+                    const response = await fetch("manage_user.php", {
                         method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        headers: { 
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
                         body: `action=delete&user_id=${userId}`
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === "success") {
-                                Swal.fire("Deleted!", "User has been deleted.", "success")
-                                    .then(() => location.reload());
-                            } else {
-                                Swal.fire("Error!", data.message, "error");
-                            }
-                        });
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        await Swal.fire(
+                            "Deleted!",
+                            "User has been deleted.",
+                            "success"
+                        );
+                        location.reload();
+                    } else {
+                        throw new Error(data.message || "Error deleting user");
+                    }
                 }
-            });
+            } catch (error) {
+                console.error("Error:", error);
+                await Swal.fire(
+                    "Error!",
+                    error.message || "Failed to delete user",
+                    "error"
+                );
+            }
         });
     });
 

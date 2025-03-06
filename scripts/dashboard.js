@@ -913,71 +913,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add delete button functionality
   deletebtn.addEventListener("click", function () {
+    if (!originalValues || !originalValues.id) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select a borrower first'
+        });
+        return;
+    }
+
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
-      if (result.isConfirmed) {
-        // Get the selected user's ID from the originalValues
-        const userId = originalValues.id;
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('id', originalValues.id);
 
-        // Send delete request to server
-        fetch("scripts/AJAX/delete_borrower.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: `id=${userId}`,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              Swal.fire(
-                "Deleted!",
-                "User has been deleted.",
-                "success",
-                3000
-              ).then(() => {
-                // Clear form
-                const form = document.querySelector("form");
-                form.reset();
-
-                // Clear previews
-                document.getElementById("idPhotoPreview").innerHTML = "";
-                document.getElementById("insurancePhotoPreview").innerHTML = "";
-                document.getElementById("collateral-preview").innerHTML = "";
-
-                // Disable buttons
-                editbtn.disabled = true;
-                deletebtn.disabled = true;
-                deletebtn.style = "background-color: #ccc; color: #fff;";
-                editbtn.style = "background-color: #ccc; color: #fff;";
-
-                // Clear search input
-                document.querySelector(".search-input").value = "";
-
-                // Disable all inputs
-                const inputs = document.querySelectorAll(
-                  ".input-text, .input-radio, .img-input, select"
+            fetch('scripts/AJAX/delete_borrower.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire(
+                        'Deleted!',
+                        'Borrower has been deleted.',
+                        'success'
+                    );
+                    // Clear form and disable buttons
+                    clearForm();
+                    // Refresh audit logs if on audit logs page
+                    if (typeof auditTable !== 'undefined') {
+                        auditTable.ajax.reload();
+                    }
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                Swal.fire(
+                    'Error!',
+                    error.message,
+                    'error'
                 );
-                inputs.forEach((input) => (input.disabled = true));
-              });
-            } else {
-              Swal.fire("Error!", "Failed to delete user.", "error");
-            }
-          })
-          .catch((error) => {
-            console.error("Delete error:", error);
-            Swal.fire("Error!", "An error occurred while deleting.", "error");
-          });
-      }
+            });
+        }
     });
-  });
+});
 
   const groceryForm = document.getElementById('groceryForm');
 

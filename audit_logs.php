@@ -28,6 +28,8 @@ $stmt->close();
 
 // Fetch audit logs
 try {
+    $category = isset($_GET['category']) ? $_GET['category'] : '';
+    
     $sql = "SELECT 
             id,
             DATE_FORMAT(date, '%Y-%m-%d') as date,
@@ -36,50 +38,53 @@ try {
             action,
             category,
             DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at
-        FROM audit_logs 
-        ORDER BY date DESC, time DESC";
+        FROM audit_logs";
+    
+    if (!empty($category)) {
+        $sql .= " WHERE category = ?";
+    }
+    
+    $sql .= " ORDER BY date DESC, time DESC";
 
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    
+    if (!empty($category)) {
+        $stmt->bind_param("s", $category);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
     $logs = array();
 
-    if ($result) {
-        while ($row = $result->fetch_assoc()) {
-            $log = array(
-                'id' => $row['id'] ?? '',
-                'date' => $row['date'] ?? date('Y-m-d'),
-                'time' => $row['time'] ?? date('H:i:s'),
-                'performed_by' => $row['performed_by'] ?? 'Unknown',
-                'action' => $row['action'] ?? 'No action recorded',
-                'category' => $row['category'] ?? 'Uncategorized',
-                'created_at' => $row['created_at'] ?? date('Y-m-d H:i:s')
-            );
-            $logs[] = $log;
-        }
+    while ($row = $result->fetch_assoc()) {
+        $logs[] = array(
+            'id' => $row['id'],
+            'date' => $row['date'],
+            'time' => $row['time'],
+            'performed_by' => $row['performed_by'],
+            'action' => $row['action'],
+            'category' => $row['category']
+        );
+    }
 
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            // If AJAX request, return JSON
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'success', 'data' => $logs]);
-            $conn->close();
-            exit();
-        }
-    } else {
-        throw new Exception("Error fetching audit logs");
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'data' => $logs
+        ]);
+        exit;
     }
 
 } catch (Exception $e) {
-    error_log("Audit Log Error: " . $e->getMessage());
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'error',
             'message' => 'Error fetching audit logs',
             'debug' => $e->getMessage()
         ]);
-        $conn->close();
-        exit();
+        exit;
     }
 }
 

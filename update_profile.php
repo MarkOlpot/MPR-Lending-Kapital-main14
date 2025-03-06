@@ -4,6 +4,21 @@ session_start();
 // Database connection
 $db = new mysqli('localhost', 'root', '', 'lendingdb');
 
+// Function to log profile changes
+function logProfileActivity($db, $action) {
+    $date = date('Y-m-d');
+    $time = date('H:i:s');
+    $performer = $_SESSION['fullname'];
+    $category = 'Profile Management';
+
+    $sql = "INSERT INTO audit_logs (date, time, performed_by, action, category) 
+            VALUES (?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("sssss", $date, $time, $performer, $action, $category);
+    $stmt->execute();
+    $stmt->close();
+}
+
 // Check connection
 if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
@@ -52,8 +67,26 @@ if (isset($_POST['update_details'])) {
             text: 'Please use a different email.',
             confirmButtonText: 'OK'
         }).then(() => { window.location.href = 'profile.php'; });";
+        
+        // Log failed attempt
+        logProfileActivity($db, "Failed to update email - Email already exists: $newEmail");
     } else {
         $emailCheckQuery->close();
+
+        // Track changes for detailed logging
+        $changes = array();
+        
+        if ($newFullname !== $currentFullname) {
+            $changes[] = "name from '$currentFullname' to '$newFullname'";
+        }
+        
+        if ($newEmail !== $currentEmail) {
+            $changes[] = "email from '$currentEmail' to '$newEmail'";
+        }
+        
+        if (!empty($password)) {
+            $changes[] = "password";
+        }
 
         // Handle folder renaming if the fullname has changed
         if ($newFullname !== $currentFullname) {
@@ -95,6 +128,13 @@ if (isset($_POST['update_details'])) {
 
         if ($stmt->execute()) {
             $_SESSION['fullname'] = $newFullname; // Update session name
+            
+            // Log successful changes
+            if (!empty($changes)) {
+                $changeLog = "Updated profile " . implode(", ", $changes);
+                logProfileActivity($db, $changeLog);
+            }
+
             $sweetAlert = "Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -102,6 +142,9 @@ if (isset($_POST['update_details'])) {
                 confirmButtonText: 'OK'
             }).then(() => { window.location.href = 'profile.php'; });";
         } else {
+            // Log failed update
+            logProfileActivity($db, "Failed to update profile: " . $stmt->error);
+            
             $sweetAlert = "Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -133,6 +176,9 @@ if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] ===
             $stmt = $db->prepare($sql);
             $stmt->bind_param("si", $targetFilePath, $user_id);
             if ($stmt->execute()) {
+                // Log successful profile picture update
+                logProfileActivity($db, "Updated profile picture");
+                
                 $sweetAlert = "Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -140,6 +186,9 @@ if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] ===
                     confirmButtonText: 'OK'
                 }).then(() => { window.location.href = 'profile.php'; });";
             } else {
+                // Log failed profile picture update
+                logProfileActivity($db, "Failed to update profile picture in database");
+                
                 $sweetAlert = "Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -149,6 +198,9 @@ if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] ===
             }
             $stmt->close();
         } else {
+            // Log failed file upload
+            logProfileActivity($db, "Failed to upload profile picture");
+            
             $sweetAlert = "Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -157,6 +209,9 @@ if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] ===
             }).then(() => { window.location.href = 'profile.php'; });";
         }
     } else {
+        // Log invalid file type attempt
+        logProfileActivity($db, "Attempted to upload invalid profile picture file type: $fileType");
+        
         $sweetAlert = "Swal.fire({
             icon: 'error',
             title: 'Invalid File Type!',

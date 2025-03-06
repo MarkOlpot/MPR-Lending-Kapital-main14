@@ -36,23 +36,26 @@ window.addEventListener("click", function (event) {
   }
 });
 $(document).ready(function() {
-    // Add filter dropdown HTML after the filter button
+    // Update the filter dropdown HTML with correct category values
     $('#filter-audit-logs-btn').after(`
         <div class="category-filter-dropdown" style="display: none; position: absolute; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); border-radius: 4px; padding: 8px; z-index: 1000;">
             <select id="categoryFilter" style="width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 <option value="">All Categories</option>
-                <option value="Admin Activity Log">Admin Activity Log</option>
-                <option value="Search Terms">Search Terms</option>
+                <option value="User Management">User Management</option>
+                <option value="User Authentication">User Authentication</option>
                 <option value="Borrower Management Logs">Borrower Management Logs</option>
                 <option value="Loan Management Logs">Loan Management Logs</option>
             </select>
         </div>
     `);
 
-    // Initialize DataTable
+    // Initialize DataTable with server-side processing
     const auditTable = $('#auditLogsTable').DataTable({
         ajax: {
             url: 'audit_logs.php',
+            data: function(d) {
+                d.category = $('#categoryFilter').val();
+            },
             dataSrc: 'data'
         },
         columns: [
@@ -113,9 +116,17 @@ $(document).ready(function() {
         $('.category-filter-dropdown').toggle();
     });
 
-    // Handle category filter change
+    // Update the category filter change handler
     $('#categoryFilter').on('change', function() {
-        auditTable.draw();
+        const selectedCategory = $(this).val();
+        
+        // Reload table with selected category
+        auditTable.ajax.reload();
+        
+        // Update filter button text
+        $('#filter-audit-logs-btn').html(`
+            <i class="fas fa-filter"></i> ${selectedCategory || 'Filter'}
+        `);
     });
 
     // Close dropdown when clicking outside

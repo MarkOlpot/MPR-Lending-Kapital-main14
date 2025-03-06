@@ -19,6 +19,17 @@ try {
         throw new Exception('Database connection failed');
     }
 
+    // Add this function after the database connection
+    function addAuditLog($db, $action, $category = "User Management") {
+        $performed_by = $_SESSION['fullname'] ?? 'Unknown User';
+        $sql = "INSERT INTO audit_logs (date, time, performed_by, action, category) 
+                VALUES (CURRENT_DATE(), CURRENT_TIME(), ?, ?, ?)";
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param("sss", $performed_by, $action, $category);
+        $stmt->execute();
+        $stmt->close();
+    }
+
     $db->begin_transaction();
 
     try {
@@ -73,16 +84,18 @@ try {
         $stmt = $db->prepare("INSERT INTO users (fullname, email, password, profile_picture, role) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("sssss", $fullname, $email, $hashedPassword, $profilePicturePath, $role);
         
-        if (!$stmt->execute()) {
-            throw new Exception('Failed to add user');
+        // Add this after successful user insertion
+        if ($stmt->execute()) {
+            // Add audit log
+            $action_desc = "Added new user: {$fullname} ({$email}) with role {$role}";
+            addAuditLog($db, $action_desc);
+            
+            $db->commit();
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'User added successfully'
+            ]);
         }
-
-        $db->commit();
-
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'User added successfully'
-        ]);
 
     } catch (Exception $e) {
         $db->rollback();
