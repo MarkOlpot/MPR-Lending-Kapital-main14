@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2025 at 02:54 AM
+-- Generation Time: Mar 07, 2025 at 06:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`id`, `home_no`, `street`, `barangay`, `city`, `province`, `region`, `created_at`) VALUES
-(9, '1213', 'ljk', 'poblacion west 4', 'asdd', 'lkj', 'a', '2025-02-14 02:50:42'),
+(9, '1213', 'ljk', '', 'asdd', 'lkj', 'a', '2025-02-14 02:50:42'),
 (10, 'qwe', 'ljk', 'poblacion west 3', 'Aliaga', 'lkj', 'jlkh', '2025-02-14 02:50:42'),
 (11, 'qwe', 'ljk', 'qwe', ';l', 'lkj', 'qwe', '2025-02-14 03:22:55'),
 (12, 'qwe', 'qwe', 'qwe', 'qwe', 'qwe', 'ewq', '2025-02-14 03:22:55'),
@@ -52,7 +52,11 @@ INSERT INTO `addresses` (`id`, `home_no`, `street`, `barangay`, `city`, `provinc
 (21, '12', 'Regina', 'Pob. East 1', 'Aliaga', 'Nueva ecija', '4', '2025-02-24 00:58:23'),
 (22, '1312321', 'Purok 7', 'west 3', 'Cabanatuan/Aliaga/Nueva Ecija', 'nueva ', '4', '2025-02-24 00:58:23'),
 (23, '69', 'para sa street', 'asd', 'sample', 'asda', 'asdas', '2025-02-26 07:20:00'),
-(24, '1', 'sample', 'asd', 'sample', 'sample', 'test', '2025-02-26 07:20:00');
+(24, '1', 'sample', 'asd', 'sample', 'sample', 'test', '2025-02-26 07:20:00'),
+(29, '69', 'salera st. ', 'bitalag', 'bacnotan ', 'la union', 'catholic charot haha', '2025-03-04 07:15:14'),
+(30, 'paulit ulit ', 'ulit ', 'ulit', 'ulit', 'ulit', 'uli', '2025-03-04 07:15:14'),
+(31, '1213', 'Purok 7', 'poblacion west 3', 'Cabanatuan/Aliaga/Nueva Ecija', 'nueva ecija', '3', '2025-03-06 07:00:57'),
+(32, '22222', 'Purok 7', 'west 3', 'Cabanatuan/Aliaga/Nueva Ecija', 'nueva ', '4', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -75,113 +79,58 @@ CREATE TABLE `audit_logs` (
 --
 
 INSERT INTO `audit_logs` (`id`, `date`, `time`, `performed_by`, `action`, `category`, `created_at`) VALUES
-(144, '2025-02-26', '15:39:26', 'Michael John P. Seva', 'Michael John P. Seva logged in', 'Admin Activity Log', '2025-02-26 07:39:26'),
-(145, '2025-02-26', '15:39:40', 'Michael John P. Seva', 'Michael John P. Seva searched for term: maranatha', 'Search Terms', '2025-02-26 07:39:40'),
-(146, '2025-02-26', '15:39:40', 'Michael John P. Seva', 'Michael John P. Seva viewed borrower: Maranatha Gapac Barredo', 'Search Logs', '2025-02-26 07:39:40'),
-(147, '2025-02-26', '15:39:53', 'Michael John P. Seva', 'Michael John P. Seva searched for term: asd', 'Search Terms', '2025-02-26 07:39:53'),
-(148, '2025-02-26', '15:39:53', 'Michael John P. Seva', 'Michael John P. Seva viewed borrower: tado asd olpot', 'Search Logs', '2025-02-26 07:39:53'),
-(149, '2025-02-26', '15:40:05', 'Michael John P. Seva', 'Michael John P. Seva updated borrower information for: tado taran olpot', 'Borrower Management logs', '2025-02-26 07:40:05'),
-(150, '2025-02-26', '15:41:07', 'Michael John P. Seva', 'Michael John P. Seva searched for term: jayson', 'Search Terms', '2025-02-26 07:41:07'),
-(151, '2025-02-26', '15:58:44', 'Michael John P. Seva', 'Michael John P. Seva searched for term: maranat', 'Search Terms', '2025-02-26 07:58:44'),
-(152, '2025-02-26', '15:58:44', 'Michael John P. Seva', 'Michael John P. Seva searched for term: maranath', 'Search Terms', '2025-02-26 07:58:44'),
-(153, '2025-02-26', '15:59:37', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 07:59:37'),
-(154, '2025-02-26', '16:00:57', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:00:57'),
-(155, '2025-02-26', '16:01:17', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-D1E306) worth ₱11.00 for borrower: Mark sample Olpot', 'Loan Managem', '2025-02-26 08:01:17'),
-(156, '2025-02-26', '16:01:17', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-D1E306) worth ₱11.00 for borrower: Mark sample Olpot', 'New Loan', '2025-02-26 08:01:17'),
-(157, '2025-02-26', '16:01:41', 'Michael John P. Seva', 'Michael John P. Seva searched for term: maranatha', 'Search Terms', '2025-02-26 08:01:41'),
-(158, '2025-02-26', '16:02:32', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:02:32'),
-(159, '2025-02-26', '16:02:48', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-86546D) worth ₱123.00 for borrower: Mark sample Olpot', 'Loan Managem', '2025-02-26 08:02:48'),
-(160, '2025-02-26', '16:02:48', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-86546D) worth ₱123.00 for borrower: Mark sample Olpot', 'New Loan', '2025-02-26 08:02:48'),
-(161, '2025-02-26', '16:03:12', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-037381) worth ₱111.00 for borrower: Mark sample Olpot', 'Loan Managem', '2025-02-26 08:03:12'),
-(162, '2025-02-26', '16:03:12', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-037381) worth ₱111.00 for borrower: Mark sample Olpot', 'New Loan', '2025-02-26 08:03:12'),
-(163, '2025-02-26', '16:04:39', 'Michael John P. Seva', 'Michael John P. Seva searched for term: m', 'Search Terms', '2025-02-26 08:04:39'),
-(164, '2025-02-26', '16:04:40', 'Michael John P. Seva', 'Michael John P. Seva searched for term: mark', 'Search Terms', '2025-02-26 08:04:40'),
-(165, '2025-02-26', '16:04:43', 'Michael John P. Seva', 'Michael John P. Seva searched for term: jayso', 'Search Terms', '2025-02-26 08:04:43'),
-(166, '2025-02-26', '16:05:28', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-02-26 08:05:28'),
-(167, '2025-02-26', '16:05:53', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-02-26 08:05:53'),
-(168, '2025-02-26', '16:06:07', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F53596) worth ₱222.00 for borrower: Maranatha Gapac Barredo', 'Loan Managem', '2025-02-26 08:06:07'),
-(169, '2025-02-26', '16:06:07', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F53596) worth ₱222.00 for borrower: Maranatha Gapac Barredo', 'New Loan', '2025-02-26 08:06:07'),
-(170, '2025-02-26', '16:06:19', 'Michael John P. Seva', 'Michael John P. Seva searched for term: m', 'Search Terms', '2025-02-26 08:06:19'),
-(171, '2025-02-26', '16:06:19', 'Michael John P. Seva', 'Michael John P. Seva searched for term: mjas', 'Search Terms', '2025-02-26 08:06:19'),
-(172, '2025-02-26', '16:06:21', 'Michael John P. Seva', 'Michael John P. Seva searched for term: jay', 'Search Terms', '2025-02-26 08:06:21'),
-(173, '2025-02-26', '16:06:22', 'Michael John P. Seva', 'Michael John P. Seva searched for term: jayson', 'Search Terms', '2025-02-26 08:06:22'),
-(174, '2025-02-26', '16:06:54', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: bus', 'Search Terms', '2025-02-26 08:06:54'),
-(175, '2025-02-26', '16:07:27', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F661B3) worth ₱1.00 for borrower: Jayson Fajardo Bustos', 'Loan Managem', '2025-02-26 08:07:27'),
-(176, '2025-02-26', '16:07:27', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F661B3) worth ₱1.00 for borrower: Jayson Fajardo Bustos', 'New Loan', '2025-02-26 08:07:27'),
-(177, '2025-02-26', '16:08:52', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-02-26 08:08:52'),
-(178, '2025-02-26', '16:09:05', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: bus', 'Search Terms', '2025-02-26 08:09:05'),
-(179, '2025-02-26', '16:09:15', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-BB44A7) worth ₱11.00 for borrower: Jayson Fajardo Bustos', 'Loan Managem', '2025-02-26 08:09:15'),
-(180, '2025-02-26', '16:09:15', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-BB44A7) worth ₱11.00 for borrower: Jayson Fajardo Bustos', 'New Loan', '2025-02-26 08:09:15'),
-(181, '2025-02-26', '16:10:18', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: b', 'Search Terms', '2025-02-26 08:10:18'),
-(182, '2025-02-26', '16:10:18', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: bu', 'Search Terms', '2025-02-26 08:10:18'),
-(183, '2025-02-26', '16:10:25', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:10:25'),
-(184, '2025-02-26', '16:10:42', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-258C9B) worth ₱1.00 for borrower: Mark sample Olpot', 'Loan Management Logs', '2025-02-26 08:10:42'),
-(185, '2025-02-26', '16:10:42', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-258C9B) worth ₱1.00 for borrower: Mark sample Olpot', 'New Loan', '2025-02-26 08:10:42'),
-(186, '2025-02-26', '16:36:21', 'Michael John P. Seva', 'Michael John P. Seva searched for term: m', 'Search Terms', '2025-02-26 08:36:21'),
-(187, '2025-02-26', '16:37:42', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mar', 'Search Terms', '2025-02-26 08:37:42'),
-(188, '2025-02-26', '16:37:54', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-29DE80) worth ₱1.00 for borrower: Maranatha Gapac Barredo', 'Loan Management Logs', '2025-02-26 08:37:54'),
-(189, '2025-02-26', '16:37:54', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-29DE80) worth ₱1.00 for borrower: Maranatha Gapac Barredo', 'New Loan', '2025-02-26 08:37:54'),
-(190, '2025-02-26', '16:38:15', 'Michael John P. Seva', 'Michael John P. Seva logged out', 'Admin Activity Log', '2025-02-26 08:38:15'),
-(191, '2025-02-26', '16:38:50', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot logged in', 'Admin Activity Log', '2025-02-26 08:38:50'),
-(192, '2025-02-26', '16:38:56', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mang', 'Search Terms', '2025-02-26 08:38:56'),
-(193, '2025-02-26', '16:39:27', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F2BB46) worth ₱11.00 for borrower: mang kepweng  returns secret', 'Loan Management Logs', '2025-02-26 08:39:27'),
-(194, '2025-02-26', '16:39:27', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F2BB46) worth ₱11.00 for borrower: mang kepweng  returns secret', 'New Loan', '2025-02-26 08:39:27'),
-(195, '2025-02-26', '16:40:16', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-08F993) worth ₱999.00 for borrower: mang kepweng  returns secret', 'Loan Management Logs', '2025-02-26 08:40:16'),
-(196, '2025-02-26', '16:40:16', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-08F993) worth ₱999.00 for borrower: mang kepweng  returns secret', 'New Loan', '2025-02-26 08:40:16'),
-(197, '2025-02-26', '16:42:31', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mar', 'Search Terms', '2025-02-26 08:42:31'),
-(198, '2025-02-26', '16:43:12', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:43:12'),
-(199, '2025-02-26', '16:43:44', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mar', 'Search Terms', '2025-02-26 08:43:44'),
-(200, '2025-02-26', '16:44:24', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: m', 'Search Terms', '2025-02-26 08:44:24'),
-(201, '2025-02-26', '16:44:56', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:44:56'),
-(202, '2025-02-26', '16:44:57', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:44:57'),
-(203, '2025-02-26', '16:46:01', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mark', 'Search Terms', '2025-02-26 08:46:01'),
-(204, '2025-02-26', '16:46:23', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F03DCA) worth ₱10,000.00 for borrower: Mark sample Olpot', 'Loan Management Logs', '2025-02-26 08:46:23'),
-(205, '2025-02-26', '16:46:23', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-F03DCA) worth ₱10,000.00 for borrower: Mark sample Olpot', 'New Loan', '2025-02-26 08:46:23'),
-(206, '2025-02-26', '16:48:43', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot logged out', 'Admin Activity Log', '2025-02-26 08:48:43'),
-(207, '2025-02-26', '16:48:47', 'Michael John P. Seva', 'Michael John P. Seva logged in', 'Admin Activity Log', '2025-02-26 08:48:47'),
-(208, '2025-03-04', '08:38:53', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot logged in', 'Admin Activity Log', '2025-03-04 00:38:53'),
-(209, '2025-03-04', '08:41:59', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mar', 'Search Terms', '2025-03-04 00:41:59'),
-(210, '2025-03-04', '08:46:25', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ta', 'Search Terms', '2025-03-04 00:46:25'),
-(211, '2025-03-04', '08:46:47', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot updated borrower information for: tado taran olpot', 'Borrower Management logs', '2025-03-04 00:46:47'),
-(212, '2025-03-04', '08:47:04', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ta', 'Search Terms', '2025-03-04 00:47:04'),
-(213, '2025-03-04', '08:47:20', 'Michael John P. Seva', 'Michael John P. Seva logged in', 'Admin Activity Log', '2025-03-04 00:47:20'),
-(214, '2025-03-04', '08:52:07', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: tara', 'Search Terms', '2025-03-04 00:52:07'),
-(215, '2025-03-04', '08:56:48', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: tara', 'Search Terms', '2025-03-04 00:56:48'),
-(216, '2025-03-04', '08:57:06', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-288B95) worth ₱1,231,231.00 for borrower: tado taran olpot', 'Loan Management Logs', '2025-03-04 00:57:06'),
-(217, '2025-03-04', '08:57:06', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-288B95) worth ₱1,231,231.00 for borrower: tado taran olpot', 'New Loan', '2025-03-04 00:57:06'),
-(218, '2025-03-04', '08:57:52', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: a', 'Search Terms', '2025-03-04 00:57:52'),
-(219, '2025-03-04', '08:57:53', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ta', 'Search Terms', '2025-03-04 00:57:53'),
-(220, '2025-03-04', '08:58:36', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: tar', 'Search Terms', '2025-03-04 00:58:36'),
-(221, '2025-03-04', '08:59:00', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-4A8B6B) worth ₱1,000.00 for borrower: tado taran olpot', 'Loan Management Logs', '2025-03-04 00:59:00'),
-(222, '2025-03-04', '08:59:00', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-4A8B6B) worth ₱1,000.00 for borrower: tado taran olpot', 'New Loan', '2025-03-04 00:59:00'),
-(223, '2025-03-04', '08:59:43', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: m', 'Search Terms', '2025-03-04 00:59:43'),
-(224, '2025-03-04', '08:59:44', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ta', 'Search Terms', '2025-03-04 00:59:44'),
-(225, '2025-03-04', '09:06:34', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: tara', 'Search Terms', '2025-03-04 01:06:34'),
-(226, '2025-03-04', '09:20:14', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:20:14'),
-(227, '2025-03-04', '09:21:10', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: taa', 'Search Terms', '2025-03-04 01:21:10'),
-(228, '2025-03-04', '09:21:12', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:21:12'),
-(229, '2025-03-04', '09:21:20', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new grocery item (Ref: GR-04EC40) worth ₱1.00 for borrower: Maranatha Gapac Barredo', 'Grocery Management', '2025-03-04 01:21:20'),
-(230, '2025-03-04', '09:21:34', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mar', 'Search Terms', '2025-03-04 01:21:34'),
-(231, '2025-03-04', '09:21:45', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-97C8D2) worth ₱12,121.00 for borrower: Maranatha Gapac Barredo', 'Loan Management Logs', '2025-03-04 01:21:45'),
-(232, '2025-03-04', '09:21:45', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new loan (Ref: LN-97C8D2) worth ₱12,121.00 for borrower: Maranatha Gapac Barredo', 'New Loan', '2025-03-04 01:21:45'),
-(233, '2025-03-04', '09:21:49', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:21:49'),
-(234, '2025-03-04', '09:21:58', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new grocery item (Ref: GR-6EDF42) worth ₱12.00 for borrower: Maranatha Gapac Barredo', 'Grocery Management', '2025-03-04 01:21:58'),
-(235, '2025-03-04', '09:22:52', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: m', 'Search Terms', '2025-03-04 01:22:52'),
-(236, '2025-03-04', '09:22:53', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:22:53'),
-(237, '2025-03-04', '09:22:59', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new grocery item (Ref: GR-3DB026) worth ₱12.00 for borrower: Maranatha Gapac Barredo', 'Grocery Management', '2025-03-04 01:22:59'),
-(238, '2025-03-04', '09:23:18', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot added new grocery item (Ref: GR-6DF054) worth ₱11,111.00 for borrower: Maranatha Gapac Barredo', 'Grocery Management', '2025-03-04 01:23:18'),
-(239, '2025-03-04', '09:33:18', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot logged in', 'Admin Activity Log', '2025-03-04 01:33:18'),
-(240, '2025-03-04', '09:33:22', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:33:22'),
-(241, '2025-03-04', '09:33:29', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot updated borrower information for: Maranatha Gapac Barredo', 'Borrower Management logs', '2025-03-04 01:33:29'),
-(242, '2025-03-04', '09:38:38', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ta', 'Search Terms', '2025-03-04 01:38:38'),
-(243, '2025-03-04', '09:44:12', 'Michael John P. Seva', 'Michael John P. Seva searched for term: m', 'Search Terms', '2025-03-04 01:44:12'),
-(244, '2025-03-04', '09:45:13', 'Michael John P. Seva', 'Michael John P. Seva added new loan (Ref: LN-9D4349) worth ₱10,000.00 for borrower: Maranatha Gapac Barredo', 'Loan Management Logs', '2025-03-04 01:45:13'),
-(245, '2025-03-04', '09:45:13', 'Michael John P. Seva', 'Michael John P. Seva added new loan (Ref: LN-9D4349) worth ₱10,000.00 for borrower: Maranatha Gapac Barredo', 'New Loan', '2025-03-04 01:45:13'),
-(246, '2025-03-04', '09:51:14', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: mara', 'Search Terms', '2025-03-04 01:51:14'),
-(247, '2025-03-04', '09:51:47', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot updated borrower information for: Maranatha Gapac Barredo', 'Borrower Management logs', '2025-03-04 01:51:47'),
-(248, '2025-03-04', '09:53:20', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: ma', 'Search Terms', '2025-03-04 01:53:20'),
-(249, '2025-03-04', '09:53:22', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: tara', 'Search Terms', '2025-03-04 01:53:22'),
-(250, '2025-03-04', '09:53:32', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot updated borrower information for: tado taran olpot', 'Borrower Management logs', '2025-03-04 01:53:32');
+(508, '2025-03-06', '14:43:37', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: n', 'Search Terms', '2025-03-06 06:43:37'),
+(509, '2025-03-06', '14:43:37', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: na', 'Search Terms', '2025-03-06 06:43:37'),
+(510, '2025-03-06', '14:48:48', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: m', 'Search Terms', '2025-03-06 06:48:48'),
+(511, '2025-03-06', '14:48:48', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: ma', 'Search Terms', '2025-03-06 06:48:48'),
+(512, '2025-03-06', '14:49:05', 'Mark Nathaniel D. Olpot jr', 'Added new user: Leopoldo (leo@gmail.com) with role user', 'User Management', '2025-03-06 06:49:05'),
+(513, '2025-03-06', '14:59:22', 'Michael John P. Seva', 'Michael John P. Seva searched for term: a', 'Search Terms', '2025-03-06 06:59:22'),
+(514, '2025-03-06', '14:59:28', 'Michael John P. Seva', 'Michael John P. Seva deleted borrower: Mark Nathaniel  Dela olpot', 'Borrower Management Logs', '2025-03-06 06:59:28'),
+(515, '2025-03-06', '15:00:57', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr added new borrower: Mark Nathaniel  Dela Vega Olpot', 'Borrower Management Logs', '2025-03-06 07:00:57'),
+(516, '2025-03-06', '15:04:40', 'Michael John P. Seva', 'Michael John P. Seva searched for term: a', 'Search Terms', '2025-03-06 07:04:40'),
+(517, '2025-03-06', '15:04:57', 'Michael John P. Seva', 'Michael John P. Seva updated borrower information for: AHAHAHAHA Dela Vega Olpot', 'Borrower Management logs', '2025-03-06 07:04:57'),
+(518, '2025-03-06', '15:05:27', 'Mark Nathaniel D. Olpot jr', 'Updated user: name from \'Michael John P. Seva\' to \'Michael Burat John P. Seva\'', 'User Management', '2025-03-06 07:05:27'),
+(519, '2025-03-06', '15:14:11', 'Michael John P. Seva', 'Updated user: name from \'Leopoldo\' to \'Leopolio\'', 'User Management', '2025-03-06 07:14:11'),
+(520, '2025-03-06', '15:15:22', 'Michael John P. Seva', 'Added new user: shimishimiya (sample@gmail.com) with role user', 'User Management', '2025-03-06 07:15:22'),
+(521, '2025-03-06', '15:18:40', 'Mark Nathaniel D. Olpot jr', 'Updated user: name from \'\' to \'shimishimiya\' and email from \'\' to \'sample1@gmail.com\'', 'User Management', '2025-03-06 07:18:40'),
+(522, '2025-03-06', '15:25:17', 'Mark Nathaniel D. Olpot jr', 'Deleted user: shimishimiya', 'User Management', '2025-03-06 07:25:17'),
+(523, '2025-03-06', '15:27:57', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: haha', 'Search Terms', '2025-03-06 07:27:57'),
+(524, '2025-03-06', '15:28:20', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr updated borrower information for: Burat  malake sheyt', 'Borrower Management logs', '2025-03-06 07:28:20'),
+(525, '2025-03-06', '15:31:29', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: hah', 'Search Terms', '2025-03-06 07:31:29'),
+(526, '2025-03-06', '15:31:31', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr searched for term: b', 'Search Terms', '2025-03-06 07:31:31'),
+(527, '2025-03-06', '15:31:45', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr added new loan (Ref: LN-1C87A5) worth ₱11,111.00 for borrower: Burat  malake sheyt', 'Loan Management Logs', '2025-03-06 07:31:45'),
+(528, '2025-03-06', '15:31:45', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr added new loan (Ref: LN-1C87A5) worth ₱11,111.00 for borrower: Burat  malake sheyt', 'New Loan', '2025-03-06 07:31:45'),
+(529, '2025-03-06', '15:34:39', 'Mark Nathaniel D. Olpot jr', 'Deleted user: Leopolio', 'User Management', '2025-03-06 07:34:39'),
+(530, '2025-03-06', '15:34:55', 'Michael John P. Seva', 'Michael John P. Seva logged out', 'Admin Activity Log', '2025-03-06 07:34:55'),
+(531, '2025-03-06', '15:34:59', 'Michael Burat John P. Seva', 'Michael Burat John P. Seva logged in as admin', 'User Authentication', '2025-03-06 07:34:59'),
+(532, '2025-03-06', '15:52:14', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr logged out', 'Admin Activity Log', '2025-03-06 07:52:14'),
+(533, '2025-03-06', '15:52:54', 'Nathaniel P. Padilla', 'Nathaniel P. Padilla logged in as user', 'User Authentication', '2025-03-06 07:52:54'),
+(534, '2025-03-06', '15:53:06', 'Nathaniel P. Padilla', 'Nathaniel P. Padilla searched for term: m', 'Search Terms', '2025-03-06 07:53:06'),
+(535, '2025-03-06', '15:53:12', 'Nathaniel P. Padilla', 'Nathaniel P. Padilla updated borrower information for: Athara Mariel  Mendoza Negrillo', 'Borrower Management logs', '2025-03-06 07:53:12'),
+(536, '2025-03-06', '15:53:14', 'Nathaniel P. Padilla', 'Nathaniel P. Padilla logged out', 'Admin Activity Log', '2025-03-06 07:53:14'),
+(537, '2025-03-06', '15:53:20', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr logged in as admin', 'User Authentication', '2025-03-06 07:53:20'),
+(538, '2025-03-06', '16:09:46', 'Michael Burat John P. Seva', 'Michael Burat John P. Seva searched for term: m', 'Search Terms', '2025-03-06 08:09:46'),
+(540, '2025-03-06', '16:22:29', 'Michael Burat John P. Seva', 'Michael Burat John P. Seva logged out', 'Admin Activity Log', '2025-03-06 08:22:29'),
+(541, '2025-03-06', '16:22:36', 'Michael Burat John P. Seva', 'Michael Burat John P. Seva logged in as admin', 'User Authentication', '2025-03-06 08:22:36'),
+(542, '2025-03-06', '16:23:06', 'Michael Burat John P. Seva', 'Added new user: sample (sample@gmail.com) with role user', 'User Management', '2025-03-06 08:23:06'),
+(544, '2025-03-06', '16:24:00', 'Michael Burat John P. Seva', 'Deleted user: sample', 'User Management', '2025-03-06 08:24:00'),
+(546, '2025-03-06', '16:30:48', 'Mark Nathaniel D. Olpot jr', 'Updated user: name from \'Mark Nathaniel D. Olpot jr\' to \'Mark Nathaniel D. Olpot\'', 'User Management', '2025-03-06 08:30:48'),
+(547, '2025-03-06', '16:36:51', 'Michael Burat John P. Seva', 'Updated user: name from \'Michael Burat John P. Seva\' to \'Michael John P. Seva\'', 'User Management', '2025-03-06 08:36:51'),
+(549, '2025-03-06', '16:38:17', 'Mark Nathaniel D. Olpot jr', 'Updated user: name from \'Mark Nathaniel D. Olpot\' to \'Mark Nathaniel D. Olpot jr\'', 'User Management', '2025-03-06 08:38:17'),
+(550, '2025-03-06', '09:42:31', 'Michael Burat John P. Seva', 'Updated profile picture', 'Profile Management', '2025-03-06 08:42:31'),
+(551, '2025-03-06', '16:42:54', 'Michael Burat John P. Seva', 'Michael Burat John P. Seva logged out', 'Admin Activity Log', '2025-03-06 08:42:54'),
+(552, '2025-03-06', '16:43:01', 'Michael John P. Seva', 'Michael John P. Seva logged in as admin', 'User Authentication', '2025-03-06 08:43:01'),
+(553, '2025-03-06', '09:43:26', 'Michael John Punzalan Seva', 'Updated profile name from \'Michael John P. Seva\' to \'Michael John Punzalan Seva\'', 'Profile Management', '2025-03-06 08:43:26'),
+(554, '2025-03-06', '16:44:18', 'Michael John Punzalan Seva', 'Michael John Punzalan Seva searched for term: m', 'Search Terms', '2025-03-06 08:44:18'),
+(555, '2025-03-06', '16:44:34', 'Michael John Punzalan Seva', 'Michael John Punzalan Seva updated borrower information for: Athara Mariel  Mendoza Negrillo', 'Borrower Management logs', '2025-03-06 08:44:34'),
+(556, '2025-03-06', '16:45:07', 'Michael John Punzalan Seva', 'Michael John Punzalan Seva logged out', 'Admin Activity Log', '2025-03-06 08:45:07'),
+(557, '2025-03-06', '16:45:13', 'Michael John Punzalan Seva', 'Michael John Punzalan Seva logged in as admin', 'User Authentication', '2025-03-06 08:45:13'),
+(558, '2025-03-06', '09:46:50', 'Mark Nathaniel D. Olpot', 'Updated profile name from \'Mark Nathaniel D. Olpot jr\' to \'Mark Nathaniel D. Olpot\'', 'Profile Management', '2025-03-06 08:46:50'),
+(559, '2025-03-06', '16:47:44', 'Mark Nathaniel D. Olpot', 'Mark Nathaniel D. Olpot searched for term: m', 'Search Terms', '2025-03-06 08:47:44'),
+(560, '2025-03-06', '09:48:08', 'Mark Nathaniel D. Olpot jr', 'Updated profile name from \'Mark Nathaniel D. Olpot\' to \'Mark Nathaniel D. Olpot jr\'', 'Profile Management', '2025-03-06 08:48:08'),
+(561, '2025-03-06', '16:56:41', 'Mark Nathaniel D. Olpot jr', 'Deleted user: Michael John Punzalan Seva', 'User Management', '2025-03-06 08:56:41'),
+(562, '2025-03-06', '16:57:17', 'Mark Nathaniel D. Olpot jr', 'Mark Nathaniel D. Olpot jr logged out', 'Admin Activity Log', '2025-03-06 08:57:17'),
+(563, '2025-03-06', '16:57:23', 'Nathaniel P. Padilla', 'Nathaniel P. Padilla logged in as user', 'User Authentication', '2025-03-06 08:57:23');
 
 -- --------------------------------------------------------
 
@@ -211,11 +160,8 @@ CREATE TABLE `borrowers` (
 --
 
 INSERT INTO `borrowers` (`id`, `first_name`, `middle_name`, `surname`, `suffix`, `sex`, `dob`, `marital_status`, `contact_number`, `address_id`, `is_deleted`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(5, 'Maranatha', 'Gapac', 'Barredo', 'Jr.', 'male', '2025-02-13', 'single', '09953838730', 9, 0, '2025-02-14 02:50:42', '2025-03-04 01:33:29', '2025-02-18 05:22:36'),
-(6, 'Mark', 'sample', 'Olpot', 'None', 'female', '2025-01-30', 'married', '09953838730', 11, 0, '2025-02-14 03:22:55', '2025-02-26 03:01:28', '2025-02-18 05:22:36'),
-(7, 'tado', 'taran', 'olpot', 'None', 'male', '2025-02-13', 'married', '09953838730', 15, 1, '2025-02-20 00:56:31', '2025-02-26 07:40:05', '2025-02-20 00:56:31'),
-(10, 'Jayson', 'Fajardo', 'Bustos', 'None', 'male', '2025-02-17', 'single', '09953838730', 21, 1, '2025-02-24 00:58:23', '2025-02-24 00:58:23', '2025-02-24 00:58:23'),
-(11, 'mang kepweng ', 'returns', 'secret', 'Sr.', 'male', '2025-02-26', 'divorced', '09197657974', 23, 1, '2025-02-26 07:20:00', '2025-02-26 07:20:00', '2025-02-26 07:20:00');
+(14, 'Athara Mariel ', 'Mendoza', 'Negrillo', 'Jr.', 'female', '2005-03-29', 'married', '09197657974', 29, 1, '2025-03-04 07:15:14', '2025-03-06 08:44:34', '2025-03-04 07:15:14'),
+(15, 'Burat ', 'malake', 'sheyt', 'None', 'male', '2025-03-17', 'single', '09953838730', 31, 1, '2025-03-06 07:00:57', '2025-03-06 07:28:20', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -235,21 +181,14 @@ CREATE TABLE `collateral_files` (
 --
 
 INSERT INTO `collateral_files` (`id`, `borrower_id`, `file_path`, `created_at`) VALUES
-(10, 5, 'collateral_files/67aeaf82209e4.png', '2025-02-14 02:50:42'),
-(11, 5, 'collateral_files/67aeaf8221252.png', '2025-02-14 02:50:42'),
-(12, 5, 'collateral_files/67aeaf8222690.png', '2025-02-14 02:50:42'),
-(13, 5, 'collateral_files/67aeaf8223f5f.png', '2025-02-14 02:50:42'),
-(14, 5, 'collateral_files/67aeaf8225281.png', '2025-02-14 02:50:42'),
-(15, 5, 'collateral_files/67aeaf8225bda.png', '2025-02-14 02:50:42'),
-(16, 6, 'collateral_files/67aeb70fb77c1.png', '2025-02-14 03:22:55'),
-(17, 6, 'collateral_files/67aeb70fb84c4.png', '2025-02-14 03:22:55'),
-(18, 6, 'collateral_files/67aeb70fb8b83.png', '2025-02-14 03:22:55'),
-(23, 10, 'collateral_files/67bbc42f575d9.jpg', '2025-02-24 00:58:23'),
-(24, 10, 'collateral_files/67bbc42f578df.png', '2025-02-24 00:58:23'),
-(25, 11, 'collateral_files/67bec0a0c9a1f.jpg', '2025-02-26 07:20:00'),
-(26, 7, 'collateral_files/67c64d770367c.jpg', '2025-03-04 00:46:47'),
-(27, 7, 'collateral_files/67c64d770432c.png', '2025-03-04 00:46:47'),
-(28, 7, 'collateral_files/67c64d7704656.png', '2025-03-04 00:46:47');
+(33, 14, 'collateral_files/67c6a88224799.png', '2025-03-04 07:15:14'),
+(34, 14, 'collateral_files/67c6a882249f0.png', '2025-03-04 07:15:14'),
+(35, 14, 'collateral_files/67c6a88224c9c.png', '2025-03-04 07:15:14'),
+(36, 14, 'collateral_files/67c6a882253ef.png', '2025-03-04 07:15:14'),
+(37, 14, 'collateral_files/67c6a88225664.png', '2025-03-04 07:15:14'),
+(38, 15, 'collateral_files/67c94829a5ed9.png', '2025-03-06 07:00:57'),
+(39, 15, 'collateral_files/67c94829a62d2.png', '2025-03-06 07:00:57'),
+(40, 15, 'collateral_files/67c94829a6544.png', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -270,11 +209,8 @@ CREATE TABLE `dependents` (
 --
 
 INSERT INTO `dependents` (`id`, `borrower_id`, `name`, `contact_number_dependents`, `created_at`) VALUES
-(2, 5, 'tado olpot', '09123456789', '2025-02-14 02:50:42'),
-(3, 6, '', '', '2025-02-14 03:22:55'),
-(4, 7, 'qwe', 'qwe', '2025-02-20 00:56:31'),
-(5, 10, 'Michael Seva', '09123456789', '2025-02-24 00:58:23'),
-(6, 11, 'asd', '09197657974', '2025-02-26 07:20:00');
+(9, 14, 'bading', '09191324234', '2025-03-04 07:15:14'),
+(10, 15, 'pogi', '12345678', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -299,11 +235,8 @@ CREATE TABLE `employment_details` (
 --
 
 INSERT INTO `employment_details` (`id`, `borrower_id`, `employer_name`, `years_with_employer`, `position`, `phone_no`, `salary`, `address_id`, `created_at`) VALUES
-(2, 5, 'tado olpot', 8, 'manager', '09953838730', 7676.00, 10, '2025-02-14 02:50:42'),
-(3, 6, 'qwe', 123, 'qwe', 'qwe', 123.00, 12, '2025-02-14 03:22:55'),
-(4, 7, 'qwe', 1, 'qwe', '123', 123.00, 16, '2025-02-20 00:56:31'),
-(7, 10, 'anthony francisco', 12, 'manager', '09953838730', 121.00, 22, '2025-02-24 00:58:23'),
-(8, 11, 'secret', 1, 'qwe', '09197657974', 1111.00, 24, '2025-02-26 07:20:00');
+(11, 14, 'badong', 1, 'sixty nine', '09197657973', 20000.00, 30, '2025-03-04 07:15:14'),
+(12, 15, 'maranatha barredo', 1, 'gm', '09953838730', 21212.00, 32, '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -321,16 +254,6 @@ CREATE TABLE `grocery` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `grocery`
---
-
-INSERT INTO `grocery` (`id`, `reference_no`, `borrower_id`, `grocery_amount`, `grocery_date`, `remarks`, `created_at`, `updated_at`) VALUES
-(12, 'GR-04EC40', 5, 1.00, '2025-03-04', 'Grocery added successfully', '2025-03-04 09:21:20', '2025-03-04 09:21:20'),
-(13, 'GR-6EDF42', 5, 12.00, '2025-03-04', 'Grocery added successfully', '2025-03-04 09:21:58', '2025-03-04 09:21:58'),
-(14, 'GR-3DB026', 5, 12.00, '2025-03-04', 'Grocery added successfully', '2025-03-04 09:22:59', '2025-03-04 09:22:59'),
-(15, 'GR-6DF054', 5, 11111.00, '2025-03-04', 'Grocery added successfully', '2025-03-04 09:23:18', '2025-03-04 09:23:18');
 
 -- --------------------------------------------------------
 
@@ -353,11 +276,8 @@ CREATE TABLE `identification_documents` (
 --
 
 INSERT INTO `identification_documents` (`id`, `borrower_id`, `id_type`, `id_no`, `expiry_date`, `id_photo_path`, `created_at`) VALUES
-(2, 5, 'National ID', '22232', '2025-02-15', 'id_photos/67aebf5b025de.png', '2025-02-14 02:50:42'),
-(3, 6, 'Birth Certificate', 'qwe', '2025-02-11', 'id_photos/67aeb70fb66dc.png', '2025-02-14 03:22:55'),
-(4, 7, 'PhilHealth', '123123', '2025-03-04', 'id_photos/67c64d7702a23.png', '2025-02-20 00:56:31'),
-(7, 10, 'SSS', '11111111', '2025-02-09', 'id_photos/67bbc42f56056.jpg', '2025-02-24 00:58:23'),
-(8, 11, 'Birth Certificate', '090909', '2025-02-26', 'id_photos/67bec0a0c8753.jfif', '2025-02-26 07:20:00');
+(11, 14, 'TIN', '12312', '2025-03-04', 'id_photos/67c6a88223421.png', '2025-03-04 07:15:14'),
+(12, 15, 'Birth Certificate', '999999', '2025-03-06', 'id_photos/67c94829a4b0f.jpg', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -381,10 +301,8 @@ CREATE TABLE `insurance_details` (
 --
 
 INSERT INTO `insurance_details` (`id`, `borrower_id`, `insurance_provider`, `issued_date`, `expiry_date`, `insurance_file_path`, `created_at`, `updated_at`) VALUES
-(2, 5, 'Manulife', '2025-03-04', '2025-03-05', 'insurance_files/67aeaf821e2a3.png', '2025-02-14 02:50:42', '2025-03-04 01:51:47'),
-(3, 7, '', '2025-02-13', '2025-02-05', 'insurance_files/67c64d7703003.jpg', '2025-02-20 00:56:31', '2025-03-04 00:46:47'),
-(4, 10, 'Manulife', '2025-02-11', '2025-02-16', 'insurance_files/67bbc42f5643c.png', '2025-02-24 00:58:23', '2025-02-24 00:58:23'),
-(5, 11, 'Sun Life', '2025-02-26', '2025-02-26', 'insurance_files/67bec0a0c9028.jfif', '2025-02-26 07:20:00', '2025-02-26 07:20:00');
+(8, 14, 'Sun Life', '2025-03-04', '2025-03-28', 'insurance_files/67c6a8822384c.png', '2025-03-04 07:15:14', '2025-03-04 08:04:28'),
+(9, 15, 'Manulife', '2025-03-03', '2025-03-06', 'insurance_files/67c94829a5347.png', '2025-03-06 07:00:57', '2025-03-06 07:00:57');
 
 -- --------------------------------------------------------
 
@@ -413,9 +331,7 @@ CREATE TABLE `loan` (
 --
 
 INSERT INTO `loan` (`id`, `reference_no`, `borrower_id`, `customer_type`, `loan_amount`, `interest_rate`, `loan_date`, `term_months`, `repayment_date`, `promissory_id`, `remarks`, `created_at`, `updated_at`) VALUES
-(97, 'LN-4A8B6B', 7, 'Regular', 1000.00, 7, '2025-03-04', 12, '2026-03-04', 96, 'das', '2025-03-04 08:59:00', '2025-03-04 08:59:00'),
-(98, 'LN-97C8D2', 5, 'Regular', 12121.00, 7, '2025-03-04', 12, '2026-03-04', 97, 'd', '2025-03-04 09:21:45', '2025-03-04 09:21:45'),
-(99, 'LN-9D4349', 5, 'Regular', 10000.00, 7, '2025-03-04', 6, '2025-09-04', 98, 'hehe', '2025-03-04 09:45:13', '2025-03-04 09:45:13');
+(102, 'LN-1C87A5', 15, 'Regular', 11111.00, 7, '2025-03-06', 12, '2026-03-06', 101, 'wqeqw', '2025-03-06 15:31:45', '2025-03-06 15:31:45');
 
 -- --------------------------------------------------------
 
@@ -436,8 +352,8 @@ CREATE TABLE `loan_balance` (
 --
 
 INSERT INTO `loan_balance` (`id`, `borrower_id`, `loan_balance`, `created_at`, `updated_at`) VALUES
-(6, 7, 1000.00, '2025-03-04 00:59:00', '2025-03-04 00:59:00'),
-(7, 5, 22121.00, '2025-03-04 01:21:45', '2025-03-04 01:45:13');
+(8, 14, 60000.00, '2025-03-04 07:24:05', '2025-03-04 07:24:05'),
+(9, 15, 11111.00, '2025-03-06 07:31:45', '2025-03-06 07:31:45');
 
 -- --------------------------------------------------------
 
@@ -475,15 +391,25 @@ CREATE TABLE `notification` (
 --
 
 INSERT INTO `notification` (`id`, `notif_content`, `status`, `created_at`) VALUES
-(1, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:51:48'),
-(2, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:51:49'),
-(3, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:52:27'),
-(4, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:52:42'),
-(5, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:52:47'),
-(6, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:53:02'),
-(7, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:53:15'),
-(8, 'tado taran olpot\'s PhilHealth is expiring in 0 days (on Mar 04, 2025)', 0, '2025-03-04 09:53:34'),
-(9, 'Maranatha Gapac Barredo\'s Manulife insurance is expiring in 1 days (on Mar 05, 2025)', 0, '2025-03-04 09:53:34');
+(886, 'Mark Nathaniel  Dela Vega olpot\'s  is expiring in 15 days (on Mar 19, 2025)', 0, '2025-03-04 15:12:30'),
+(887, 'Mark Nathaniel  Dela Vega olpot\'s Manulife insurance is expiring in 22 days (on Mar 26, 2025)', 0, '2025-03-04 15:12:30'),
+(891, 'Jayson Fajardo bustos\'s Manulife insurance is expiring in 20 days (on Mar 24, 2025)', 0, '2025-03-04 15:13:50'),
+(893, 'Jayson Fajardo bustos\'s Voter\'s ID is expiring in 15 days (on Mar 19, 2025)', 0, '2025-03-04 15:14:12'),
+(895, 'Jayson Fajardo bustos\'s Manulife insurance is expiring in 15 days (on Mar 19, 2025)', 0, '2025-03-04 15:14:12'),
+(897, 'Athara Mariel  Mendoza Negrillo\'s TIN is expiring in 0 days (on Mar 04, 2025)', 0, '2025-03-04 15:15:35'),
+(902, 'Athara Mariel  Mendoza Negrillo\'s Sun Life insurance is expiring in 28 days (on Apr 01, 2025)', 0, '2025-03-04 15:15:35'),
+(1748, 'Athara Mariel  Mendoza Negrillo\'s Sun Life insurance is expiring in 24 days (on Mar 28, 2025)', 0, '2025-03-04 16:04:31'),
+(2541, 'Jayson Fajardo bustos\'s Voter\'s ID is expiring in 13 days (on Mar 19, 2025)', 0, '2025-03-06 08:42:46'),
+(2542, 'Jayson Fajardo bustos\'s Manulife insurance is expiring in 13 days (on Mar 19, 2025)', 0, '2025-03-06 08:42:46'),
+(2543, 'Athara Mariel  Mendoza Negrillo\'s Sun Life insurance is expiring in 22 days (on Mar 28, 2025)', 0, '2025-03-06 08:42:46'),
+(2598, 'Mark Nathaniel  Dela Vega olpot\'s TIN is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 08:54:27'),
+(4650, 'Mark Nathaniel  Dela olpot\'s TIN is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 14:27:23'),
+(4895, 'Mark Nathaniel  Dela Vega Olpot\'s Birth Certificate is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:01:01'),
+(4896, 'Mark Nathaniel  Dela Vega Olpot\'s Manulife insurance is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:01:01'),
+(4916, 'AHAHAHAHA Dela Vega Olpot\'s Birth Certificate is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:05:02'),
+(4917, 'AHAHAHAHA Dela Vega Olpot\'s Manulife insurance is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:05:02'),
+(5054, 'Burat  malake sheyt\'s Birth Certificate is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:28:22'),
+(5055, 'Burat  malake sheyt\'s Manulife insurance is expiring in 0 days (on Mar 06, 2025)', 0, '2025-03-06 15:28:22');
 
 -- --------------------------------------------------------
 
@@ -519,58 +445,8 @@ CREATE TABLE `promissory_files` (
 --
 
 INSERT INTO `promissory_files` (`id`, `promissory_file_path`, `created_at`) VALUES
-(47, '1740367715_67bbe763b71b4.jpg', '2025-02-24 11:28:35'),
-(48, '1740368070_67bbe8c695289.jpg', '2025-02-24 11:34:30'),
-(49, '1740368080_67bbe8d0ed9c2.jpg', '2025-02-24 11:34:40'),
-(50, '1740368193_67bbe94148ecd.pdf', '2025-02-24 11:36:33'),
-(51, '1740373743_67bbfeef728f2.png', '2025-02-24 13:09:03'),
-(52, '1740374044_67bc001cbb663.jpg', '2025-02-24 13:14:04'),
-(53, '1740374520_67bc01f855fee.jpg', '2025-02-24 13:22:00'),
-(54, '1740374573_67bc022d46f32.pdf', '2025-02-24 13:22:53'),
-(55, '1740377887_67bc0f1faa4b0.png', '2025-02-24 14:18:07'),
-(56, '1740378139_67bc101bee775.png', '2025-02-24 14:22:19'),
-(57, '1740378569_67bc11c9c8c06.png', '2025-02-24 14:29:29'),
-(58, '1740378676_67bc1234b76e9.png', '2025-02-24 14:31:16'),
-(59, '1740379958_67bc17368e455.jpg', '2025-02-24 14:52:38'),
-(60, '1740532988_67be6cfc983fd.jpg', '2025-02-26 09:23:08'),
-(61, '1740533106_67be6d721e407.pdf', '2025-02-26 09:25:06'),
-(62, '1740556757_67bec9d52b637.jpg', '2025-02-26 15:59:17'),
-(63, '1740556792_67bec9f87a060.jpg', '2025-02-26 15:59:52'),
-(64, '1740556812_67beca0c0c53e.jpg', '2025-02-26 16:00:12'),
-(65, '1740556816_67beca104b0ca.jpg', '2025-02-26 16:00:16'),
-(66, '1740556877_67beca4d1e36c.pdf', '2025-02-26 16:01:17'),
-(67, '1740556883_67beca53f3145.jpg', '2025-02-26 16:01:23'),
-(68, '1740556889_67beca599875c.jpg', '2025-02-26 16:01:29'),
-(69, '1740556921_67beca79b1139.jpg', '2025-02-26 16:02:01'),
-(70, '1740556946_67beca927053f.jpg', '2025-02-26 16:02:26'),
-(71, '1740556959_67beca9fc1043.jpg', '2025-02-26 16:02:39'),
-(72, '1740556965_67becaa55ecfb.jpg', '2025-02-26 16:02:45'),
-(73, '1740556968_67becaa865523.jpg', '2025-02-26 16:02:48'),
-(74, '1740556992_67becac0373c4.jpg', '2025-02-26 16:03:12'),
-(75, '1740557106_67becb328fd0d.png', '2025-02-26 16:05:06'),
-(76, '1740557143_67becb5731851.jpg', '2025-02-26 16:05:43'),
-(77, '1740557167_67becb6f535d3.jpg', '2025-02-26 16:06:07'),
-(78, '1740557207_67becb9751613.jpg', '2025-02-26 16:06:47'),
-(79, '1740557247_67becbbf66256.jpg', '2025-02-26 16:07:27'),
-(80, '1740557355_67becc2bb4539.pdf', '2025-02-26 16:09:15'),
-(81, '1740557442_67becc8258d81.pdf', '2025-02-26 16:10:42'),
-(82, '1740559016_67bed2a897676.png', '2025-02-26 16:36:56'),
-(83, '1740559052_67bed2cc6b0cb.png', '2025-02-26 16:37:32'),
-(84, '1740559074_67bed2e29df28.pdf', '2025-02-26 16:37:54'),
-(85, '1740559156_67bed334ebb07.png', '2025-02-26 16:39:16'),
-(86, '1740559167_67bed33f2bb7a.png', '2025-02-26 16:39:27'),
-(87, '1740559196_67bed35c321e7.jpg', '2025-02-26 16:39:56'),
-(88, '1740559216_67bed3708f9bf.jpg', '2025-02-26 16:40:16'),
-(89, '1740559435_67bed44b2f092.pdf', '2025-02-26 16:43:55'),
-(90, '1740559523_67bed4a3bee46.jpg', '2025-02-26 16:45:23'),
-(91, '1740559577_67bed4d9d4f75.pdf', '2025-02-26 16:46:17'),
-(92, '1740559583_67bed4df03dff.pdf', '2025-02-26 16:46:23'),
-(93, '1741049242_67c64d9a87b10.pdf', '2025-03-04 08:47:22'),
-(94, '1741049276_67c64dbcb2de9.pdf', '2025-03-04 08:47:56'),
-(95, '1741049826_67c64fe288c3b.pdf', '2025-03-04 08:57:06'),
-(96, '1741049940_67c65054a8bfd.jpg', '2025-03-04 08:59:00'),
-(97, '1741051305_67c655a97c959.jpg', '2025-03-04 09:21:45'),
-(98, '1741052713_67c65b29d43dc.png', '2025-03-04 09:45:13');
+(100, '1741073045_67c6aa95a432a.png', '2025-03-04 15:24:05'),
+(101, '1741246305_67c94f61c898c.png', '2025-03-06 15:31:45');
 
 -- --------------------------------------------------------
 
@@ -594,61 +470,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `reference_no`, `transaction_type`, `transaction_date`, `amount`, `borrower_id`, `created_at`, `updated_at`) VALUES
-(1, 'GR-93E944', 'grocery', '2025-02-24 00:00:00', 231312.00, 5, '2025-02-24 10:21:45', '2025-02-24 10:21:45'),
-(2, 'GR-E1DF99', 'grocery', '2025-02-24 00:00:00', 123.00, 5, '2025-02-24 10:42:22', '2025-02-24 10:42:22'),
-(3, 'GR-7C5A18', 'grocery', '2025-02-24 00:00:00', 121.00, 5, '2025-02-24 11:51:51', '2025-02-24 11:51:51'),
-(4, 'GR-65AF99', 'grocery', '2025-02-24 00:00:00', 1.00, 5, '2025-02-24 14:15:18', '2025-02-24 14:15:18'),
-(5, 'GR-C8EA9E', 'grocery', '2025-02-24 00:00:00', 123123.00, 5, '2025-02-24 14:15:56', '2025-02-24 14:15:56'),
-(6, 'LN-68E3C9', 'loan', '2025-02-24 14:52:38', 31231.00, 5, '2025-02-24 14:52:38', '2025-02-24 14:52:38'),
-(7, 'LN-C981D8', 'loan', '2025-02-26 09:23:08', 3.00, 6, '2025-02-26 09:23:08', '2025-02-26 09:23:08'),
-(8, 'LN-21E373', 'loan', '2025-02-26 09:25:06', 1.00, 6, '2025-02-26 09:25:06', '2025-02-26 09:25:06'),
-(9, 'LN-52B585', 'loan', '2025-02-26 15:59:17', 10.00, 5, '2025-02-26 15:59:17', '2025-02-26 15:59:17'),
-(10, 'LN-879FB5', 'loan', '2025-02-26 15:59:52', 1.00, 6, '2025-02-26 15:59:52', '2025-02-26 15:59:52'),
-(11, 'LN-C0C50C', 'loan', '2025-02-26 16:00:12', 1.00, 6, '2025-02-26 16:00:12', '2025-02-26 16:00:12'),
-(12, 'LN-04B097', 'loan', '2025-02-26 16:00:16', 10.00, 5, '2025-02-26 16:00:16', '2025-02-26 16:00:16'),
-(13, 'LN-D1E306', 'loan', '2025-02-26 16:01:17', 11.00, 6, '2025-02-26 16:01:17', '2025-02-26 16:01:17'),
-(14, 'LN-3F3101', 'loan', '2025-02-26 16:01:24', 111.00, 5, '2025-02-26 16:01:24', '2025-02-26 16:01:24'),
-(15, 'LN-99872A', 'loan', '2025-02-26 16:01:29', 111.00, 5, '2025-02-26 16:01:29', '2025-02-26 16:01:29'),
-(16, 'LN-9B1068', 'loan', '2025-02-26 16:02:01', 10.00, 5, '2025-02-26 16:02:01', '2025-02-26 16:02:01'),
-(17, 'LN-270512', 'loan', '2025-02-26 16:02:26', 1.00, 6, '2025-02-26 16:02:26', '2025-02-26 16:02:26'),
-(18, 'LN-FC0FBA', 'loan', '2025-02-26 16:02:39', 10.00, 5, '2025-02-26 16:02:39', '2025-02-26 16:02:39'),
-(19, 'LN-55ECCF', 'loan', '2025-02-26 16:02:45', 10.00, 5, '2025-02-26 16:02:45', '2025-02-26 16:02:45'),
-(20, 'LN-86546D', 'loan', '2025-02-26 16:02:48', 123.00, 6, '2025-02-26 16:02:48', '2025-02-26 16:02:48'),
-(21, 'LN-037381', 'loan', '2025-02-26 16:03:12', 111.00, 6, '2025-02-26 16:03:12', '2025-02-26 16:03:12'),
-(22, 'LN-28FC30', 'loan', '2025-02-26 16:05:06', 10.00, 10, '2025-02-26 16:05:06', '2025-02-26 16:05:06'),
-(23, 'LN-7317B8', 'loan', '2025-02-26 16:05:43', 321.00, 5, '2025-02-26 16:05:43', '2025-02-26 16:05:43'),
-(24, 'LN-F53596', 'loan', '2025-02-26 16:06:07', 222.00, 5, '2025-02-26 16:06:07', '2025-02-26 16:06:07'),
-(25, 'LN-751584', 'loan', '2025-02-26 16:06:47', 100.00, 10, '2025-02-26 16:06:47', '2025-02-26 16:06:47'),
-(26, 'LN-F661B3', 'loan', '2025-02-26 16:07:27', 1.00, 10, '2025-02-26 16:07:27', '2025-02-26 16:07:27'),
-(27, 'LN-BB44A7', 'loan', '2025-02-26 16:09:15', 11.00, 10, '2025-02-26 16:09:15', '2025-02-26 16:09:15'),
-(28, 'LN-258C9B', 'loan', '2025-02-26 16:10:42', 1.00, 6, '2025-02-26 16:10:42', '2025-02-26 16:10:42'),
-(29, 'LN-8975DE', 'loan', '2025-02-26 16:36:56', 100.00, 11, '2025-02-26 16:36:56', '2025-02-26 16:36:56'),
-(30, 'LN-C6B07E', 'loan', '2025-02-26 16:37:32', 100.00, 11, '2025-02-26 16:37:32', '2025-02-26 16:37:32'),
-(31, 'LN-29DE80', 'loan', '2025-02-26 16:37:54', 1.00, 5, '2025-02-26 16:37:54', '2025-02-26 16:37:54'),
-(32, 'LN-4EBADE', 'loan', '2025-02-26 16:39:16', 10.00, 11, '2025-02-26 16:39:16', '2025-02-26 16:39:16'),
-(33, 'LN-F2BB46', 'loan', '2025-02-26 16:39:27', 11.00, 11, '2025-02-26 16:39:27', '2025-02-26 16:39:27'),
-(34, 'LN-C3213B', 'loan', '2025-02-26 16:39:56', 12.00, 11, '2025-02-26 16:39:56', '2025-02-26 16:39:56'),
-(35, 'LN-08F993', 'loan', '2025-02-26 16:40:16', 999.00, 11, '2025-02-26 16:40:16', '2025-02-26 16:40:16'),
-(36, 'LN-B2EFF6', 'loan', '2025-02-26 16:43:55', 2.00, 5, '2025-02-26 16:43:55', '2025-02-26 16:43:55'),
-(37, 'LN-3BED95', 'loan', '2025-02-26 16:45:23', 2.00, 6, '2025-02-26 16:45:23', '2025-02-26 16:45:23'),
-(38, 'LN-9D4EE6', 'loan', '2025-02-26 16:46:17', 10.00, 6, '2025-02-26 16:46:17', '2025-02-26 16:46:17'),
-(39, 'LN-F03DCA', 'loan', '2025-02-26 16:46:23', 10000.00, 6, '2025-02-26 16:46:23', '2025-02-26 16:46:23'),
-(40, 'LN-A87A4B', 'loan', '2025-03-04 08:47:22', 11.00, 7, '2025-03-04 08:47:22', '2025-03-04 08:47:22'),
-(41, 'LN-CB2CD0', 'loan', '2025-03-04 08:47:56', 11.00, 7, '2025-03-04 08:47:56', '2025-03-04 08:47:56'),
-(42, 'LN-288B95', 'loan', '2025-03-04 08:57:06', 1231231.00, 7, '2025-03-04 08:57:06', '2025-03-04 08:57:06'),
-(43, 'LN-4A8B6B', 'loan', '2025-03-04 08:59:00', 1000.00, 7, '2025-03-04 08:59:00', '2025-03-04 08:59:00'),
-(44, 'GR-8DF5CE', 'grocery', '2025-03-04 00:00:00', 10.00, 7, '2025-03-04 08:59:36', '2025-03-04 08:59:36'),
-(45, 'GR-2A757E', 'grocery', '2025-03-04 00:00:00', 10.00, 7, '2025-03-04 09:00:18', '2025-03-04 09:00:18'),
-(46, 'GR-1841FD', 'grocery', '2025-03-04 00:00:00', 1.00, 7, '2025-03-04 09:00:33', '2025-03-04 09:00:33'),
-(47, 'GR-6EC2C7', 'grocery', '2025-03-04 00:00:00', 10.00, 7, '2025-03-04 09:00:54', '2025-03-04 09:00:54'),
-(48, 'GR-313C28', 'grocery', '2025-03-04 00:00:00', 10000.00, 7, '2025-03-04 09:06:43', '2025-03-04 09:06:43'),
-(49, 'GR-57BE17', 'grocery', '2025-03-04 00:00:00', 10000000.00, 7, '2025-03-04 09:07:01', '2025-03-04 09:07:01'),
-(50, 'GR-04EC40', 'grocery', '2025-03-04 00:00:00', 1.00, 5, '2025-03-04 09:21:20', '2025-03-04 09:21:20'),
-(51, 'LN-97C8D2', 'loan', '2025-03-04 09:21:45', 12121.00, 5, '2025-03-04 09:21:45', '2025-03-04 09:21:45'),
-(52, 'GR-6EDF42', 'grocery', '2025-03-04 00:00:00', 12.00, 5, '2025-03-04 09:21:58', '2025-03-04 09:21:58'),
-(53, 'GR-3DB026', 'grocery', '2025-03-04 00:00:00', 12.00, 5, '2025-03-04 09:22:59', '2025-03-04 09:22:59'),
-(54, 'GR-6DF054', 'grocery', '2025-03-04 00:00:00', 11111.00, 5, '2025-03-04 09:23:18', '2025-03-04 09:23:18'),
-(55, 'LN-9D4349', 'loan', '2025-03-04 09:45:13', 10000.00, 5, '2025-03-04 09:45:13', '2025-03-04 09:45:13');
+(58, 'LN-5A425C', 'loan', '2025-03-04 15:24:05', 60000.00, 14, '2025-03-04 15:24:05', '2025-03-04 15:24:05'),
+(59, 'LN-1C87A5', 'loan', '2025-03-06 15:31:45', 11111.00, 15, '2025-03-06 15:31:45', '2025-03-06 15:31:45');
 
 -- --------------------------------------------------------
 
@@ -672,8 +495,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `profile_picture`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'Mark Nathaniel D. Olpot', 'olpottado@gmail.com', '$2y$10$fw5LsHyJOpI6WQXhH6dpl.6RYUCT4Tm3p/srUOlXD5QPl8eSmvK32', 'uploads/users/mark_nathaniel_d__olpot/profile/profile.jpg', 'admin', '2025-02-20 06:09:01', '2025-02-20 06:09:01'),
-(4, 'Michael John P. Seva', 'michaeljohnseva@gmail.com', '$2y$10$pJDC0EIgVZkkygBzrzdJEuMN/tbzXDYj.r4ULhsEWu.aw3IJgPJsG', 'uploads/users/michael_john_p__seva/profile/profile.jpg', 'admin', '2025-02-24 06:54:35', '2025-02-24 06:54:35');
+(1, 'Mark Nathaniel D. Olpot jr', 'olpottado@gmail.com', '$2y$10$fw5LsHyJOpI6WQXhH6dpl.6RYUCT4Tm3p/srUOlXD5QPl8eSmvK32', 'uploads/users/mark_nathaniel_d__olpot_jr/profile/Screenshot (116).png', 'admin', '2025-02-20 06:09:01', '2025-03-06 08:48:08'),
+(39, 'Takahiro S. Inoue', 'takahiroinoue16@gmail.com', '$2y$10$MqLK3sNsxucb6dx1R4YPGuAMTF2./.OTn7EQ17E5MO6WjUavLFLfu', 'uploads/users/takahiro_s__inoue/profile/profile.jpg', 'admin', '2025-03-06 05:49:28', '2025-03-06 05:49:28'),
+(40, 'Nathaniel P. Padilla', 'nathpadilla81@gmail.com', '$2y$10$LbmLfKftgjmj5pixmzp05.TV8yB2OVV4/pJcHDgho7F9bsQYdeHHK', 'uploads/users/nathaniel_p__padilla/profile/profile.jpg', 'user', '2025-03-06 05:50:27', '2025-03-06 05:50:27');
 
 --
 -- Indexes for dumped tables
@@ -768,7 +592,8 @@ ALTER TABLE `loan_schedules`
 -- Indexes for table `notification`
 --
 ALTER TABLE `notification`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_notif` (`notif_content`);
 
 --
 -- Indexes for table `payment`
@@ -805,67 +630,67 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=564;
 
 --
 -- AUTO_INCREMENT for table `borrowers`
 --
 ALTER TABLE `borrowers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `collateral_files`
 --
 ALTER TABLE `collateral_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `dependents`
 --
 ALTER TABLE `dependents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `employment_details`
 --
 ALTER TABLE `employment_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `grocery`
 --
 ALTER TABLE `grocery`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `identification_documents`
 --
 ALTER TABLE `identification_documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `insurance_details`
 --
 ALTER TABLE `insurance_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `loan`
 --
 ALTER TABLE `loan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT for table `loan_balance`
 --
 ALTER TABLE `loan_balance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `loan_schedules`
@@ -877,7 +702,7 @@ ALTER TABLE `loan_schedules`
 -- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5486;
 
 --
 -- AUTO_INCREMENT for table `payment`
@@ -889,19 +714,19 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `promissory_files`
 --
 ALTER TABLE `promissory_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Constraints for dumped tables
