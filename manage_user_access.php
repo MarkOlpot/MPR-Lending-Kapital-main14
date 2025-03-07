@@ -133,6 +133,7 @@ $db->close();
             <input type="text" id="fullname" name="fullname" required>
             <br>
             <br>
+            <br>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>

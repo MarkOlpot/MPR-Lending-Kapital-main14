@@ -213,42 +213,78 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Handle Edit Button
+    // Replace the edit button handler section
     document.querySelectorAll(".edit-button").forEach(button => {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", async function() {
             const row = this.closest("tr");
             const userId = this.getAttribute("data-id");
             const fullname = row.querySelector(".fullname").textContent;
             const email = row.querySelector(".email").textContent;
 
-            Swal.fire({
-                title: "Edit User",
-                html: `
-                    <input type="text" id="editFullname" class="swal2-input" value="${fullname}">
-                    <input type="email" id="editEmail" class="swal2-input" value="${email}">
-                `,
-                showCancelButton: true,
-                confirmButtonText: "Save Changes",
-                preConfirm: () => {
-                    const newFullname = document.getElementById("editFullname").value;
-                    const newEmail = document.getElementById("editEmail").value;
+            try {
+                const { value: formValues } = await Swal.fire({
+                    title: 'Edit User',
+                    html: `
+                        <div class="edit-user-form">
+                            <label for="editFullname">Full Name:</label>
+                            <input type="text" id="editFullname" class="swal2-input" value="${fullname}" required>
+                            
+                            <label for="editEmail">Email:</label>
+                            <input type="email" id="editEmail" class="swal2-input" value="${email}" required>
+                        </div>
+                    `,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Save Changes',
+                    cancelButtonText: 'Cancel',
+                    preConfirm: () => {
+                        const newFullname = document.getElementById('editFullname').value.trim();
+                        const newEmail = document.getElementById('editEmail').value.trim();
 
-                    return fetch("manage_user.php", {
+                        if (!newFullname || !newEmail) {
+                            Swal.showValidationMessage('All fields are required');
+                            return false;
+                        }
+
+                        if (!newEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                            Swal.showValidationMessage('Please enter a valid email address');
+                            return false;
+                        }
+
+                        return { fullname: newFullname, email: newEmail };
+                    }
+                });
+
+                if (formValues) {
+                    const response = await fetch("manage_user.php", {
                         method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: `action=edit&user_id=${userId}&fullname=${newFullname}&email=${newEmail}`
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === "success") {
-                                Swal.fire("Updated!", "User details have been updated.", "success")
-                                    .then(() => location.reload());
-                            } else {
-                                Swal.fire("Error!", data.message, "error");
-                            }
+                        headers: { 
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `action=edit&user_id=${userId}&fullname=${encodeURIComponent(formValues.fullname)}&email=${encodeURIComponent(formValues.email)}`
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === "success") {
+                        await Swal.fire({
+                            title: "Success!",
+                            text: "User details have been updated",
+                            icon: "success"
                         });
+                        location.reload();
+                    } else {
+                        throw new Error(data.message || "Failed to update user");
+                    }
                 }
-            });
+            } catch (error) {
+                console.error("Error:", error);
+                await Swal.fire({
+                    title: "Error!",
+                    text: error.message || "Failed to update user",
+                    icon: "error"
+                });
+            }
         });
     });
 });
